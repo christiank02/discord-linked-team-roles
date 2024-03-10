@@ -1,8 +1,8 @@
 package de.aimless.aimless_java_bot.configuration;
 
-import de.aimless.aimless_java_bot.oauth2.RestOAuth2AccessTokenResponseClient;
-import de.aimless.aimless_java_bot.oauth2.RestOAuth2SuccessHandler;
-import de.aimless.aimless_java_bot.oauth2.RestOAuth2UserService;
+import de.aimless.aimless_java_bot.security.RestOAuth2AccessTokenResponseClient;
+import de.aimless.aimless_java_bot.security.RestOAuth2SuccessHandler;
+import de.aimless.aimless_java_bot.security.RestOAuth2UserService;
 import de.aimless.aimless_java_bot.repository.LinkedRoleRepository;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.beans.factory.annotation.Value;

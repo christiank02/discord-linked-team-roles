@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.oauth2;
+package de.aimless.aimless_java_bot.security;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.*;

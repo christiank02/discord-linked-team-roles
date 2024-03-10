@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.tasks.roletasks;
+package de.aimless.aimless_java_bot.tasks;
 
 import de.aimless.aimless_java_bot.entity.BoosterRole;
 import de.aimless.aimless_java_bot.repository.BoosterRoleRepository;

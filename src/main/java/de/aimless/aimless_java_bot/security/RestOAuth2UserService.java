@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.oauth2;
+package de.aimless.aimless_java_bot.security;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;

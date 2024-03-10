@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.commandhandler;
+package de.aimless.aimless_java_bot.handlers;
 
 import de.aimless.aimless_java_bot.command.CommandName;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

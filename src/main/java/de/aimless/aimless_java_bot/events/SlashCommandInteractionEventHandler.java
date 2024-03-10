@@ -1,8 +1,8 @@
 package de.aimless.aimless_java_bot.events;
 
 import de.aimless.aimless_java_bot.command.CommandName;
-import de.aimless.aimless_java_bot.commandhandler.AbstractCommandHandler;
-import de.aimless.aimless_java_bot.commandhandler.registermetadata.RegisterMetaDataCommandHandler;
+import de.aimless.aimless_java_bot.handlers.AbstractCommandHandler;
+import de.aimless.aimless_java_bot.handlers.registermetadata.RegisterMetaDataCommandHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;

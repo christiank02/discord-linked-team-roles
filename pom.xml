@@ -196,7 +196,7 @@
                                 </goals>
                                 <configuration>
                                     <files>
-                                        <file>dev.properties</file>
+                                        <file>src/main/resources/dev.properties</file>
                                     </files>
                                 </configuration>
                             </execution>

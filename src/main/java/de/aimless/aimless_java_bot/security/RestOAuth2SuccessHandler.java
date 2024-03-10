@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.oauth2;
+package de.aimless.aimless_java_bot.security;
 
 import de.aimless.aimless_java_bot.http.RoleConnectionWrapper;
 import de.aimless.aimless_java_bot.entity.LinkedRole;

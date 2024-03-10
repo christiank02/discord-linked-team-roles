@@ -1,7 +1,7 @@
-package de.aimless.aimless_java_bot.commandhandler.linkedrole;
+package de.aimless.aimless_java_bot.handlers.linkedrole;
 
 import de.aimless.aimless_java_bot.command.CommandName;
-import de.aimless.aimless_java_bot.commandhandler.AbstractCommandHandler;
+import de.aimless.aimless_java_bot.handlers.AbstractCommandHandler;
 import de.aimless.aimless_java_bot.entity.LinkedRole;
 import de.aimless.aimless_java_bot.mapper.LinkedRoleMapper;
 import de.aimless.aimless_java_bot.repository.LinkedRoleRepository;

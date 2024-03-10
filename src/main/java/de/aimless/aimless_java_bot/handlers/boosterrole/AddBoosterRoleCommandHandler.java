@@ -1,7 +1,7 @@
-package de.aimless.aimless_java_bot.commandhandler.boosterrole;
+package de.aimless.aimless_java_bot.handlers.boosterrole;
 
 import de.aimless.aimless_java_bot.command.CommandName;
-import de.aimless.aimless_java_bot.commandhandler.AbstractCommandHandler;
+import de.aimless.aimless_java_bot.handlers.AbstractCommandHandler;
 import de.aimless.aimless_java_bot.entity.BoosterRole;
 import de.aimless.aimless_java_bot.mapper.BoosterRoleMapper;
 import de.aimless.aimless_java_bot.repository.BoosterRoleRepository;

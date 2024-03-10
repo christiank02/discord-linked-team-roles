@@ -1,7 +1,7 @@
-package de.aimless.aimless_java_bot.commandhandler.registermetadata;
+package de.aimless.aimless_java_bot.handlers.registermetadata;
 
 import de.aimless.aimless_java_bot.command.CommandName;
-import de.aimless.aimless_java_bot.commandhandler.AbstractCommandHandler;
+import de.aimless.aimless_java_bot.handlers.AbstractCommandHandler;
 import net.dv8tion.jda.api.entities.RoleConnectionMetadata;
 import net.dv8tion.jda.api.entities.RoleConnectionMetadata.MetadataType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
