@@ -1,5 +1,6 @@
 package de.aimless.aimless_java_bot.http;
 
+import de.aimless.aimless_java_bot.http.route.ExtendedSelfRoute;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
