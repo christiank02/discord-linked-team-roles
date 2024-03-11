@@ -53,7 +53,6 @@ public class RandomAnimeCharacterTask {
                 return;
             }
 
-
             randomCharacterTextChannel.sendMessage("Random Anime Characters: " + characters).queue();
         });
 
