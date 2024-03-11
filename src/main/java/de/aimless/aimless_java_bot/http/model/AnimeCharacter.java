@@ -33,22 +33,3 @@ public class AnimeCharacter {
     }
 }
 
-@Getter
-@Setter
-class Images {
-    private Jpg jpg;
-    private Webp webp;
-}
-
-@Getter
-@Setter
-class Jpg {
-    private String image_url;
-}
-
-@Getter
-@Setter
-class Webp {
-    private String image_url;
-    private String small_image_url;
-}

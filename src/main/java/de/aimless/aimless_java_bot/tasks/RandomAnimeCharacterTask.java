@@ -4,6 +4,7 @@ import de.aimless.aimless_java_bot.entity.GuildEntity;
 import de.aimless.aimless_java_bot.http.RandomAnimeCharacterWrapper;
 import de.aimless.aimless_java_bot.http.model.AnimeCharacter;
 import de.aimless.aimless_java_bot.repository.GuildRepository;
+import de.aimless.aimless_java_bot.service.KissMarryKillGameService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -23,15 +24,17 @@ public class RandomAnimeCharacterTask {
     private final RandomAnimeCharacterWrapper randomAnimeCharacterWrapper;
     private final GuildRepository guildRepository;
     private final JDA jda;
+    private final KissMarryKillGameService kissMarryKillGameService;
 
-    public RandomAnimeCharacterTask(JDA jda, RandomAnimeCharacterWrapper randomAnimeCharacterWrapper, GuildRepository guildRepository) {
+    public RandomAnimeCharacterTask(JDA jda, RandomAnimeCharacterWrapper randomAnimeCharacterWrapper, GuildRepository guildRepository, KissMarryKillGameService kissMarryKillGameService) {
         this.jda = jda;
         this.randomAnimeCharacterWrapper = randomAnimeCharacterWrapper;
         this.guildRepository = guildRepository;
+        this.kissMarryKillGameService = kissMarryKillGameService;
     }
 
-    //@Scheduled(cron = "0 0 */2 * * ?") // every 2 hours
-    @Scheduled(cron = "0 * * * * ?") // every minute
+    @Scheduled(cron = "0 0 */2 * * ?") // every 2 hours
+    //@Scheduled(cron = "0 * * * * ?") // every minute
     public void sendRandomAnimeCharacters() {
         List<AnimeCharacter> characters = randomAnimeCharacterWrapper.getRandomAnimeCharacters(3);
 
@@ -53,9 +56,7 @@ public class RandomAnimeCharacterTask {
                 return;
             }
 
-            randomCharacterTextChannel.sendMessage("Random Anime Characters: " + characters).queue();
+            kissMarryKillGameService.sendGameMessages(characters, randomCharacterTextChannel);
         });
-
-        characters.forEach(character -> LOGGER.info("Random Anime Character: {}", character));
     }
 }
