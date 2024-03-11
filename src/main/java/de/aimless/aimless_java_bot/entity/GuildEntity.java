@@ -1,5 +1,6 @@
 package de.aimless.aimless_java_bot.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -9,6 +10,7 @@ public class GuildEntity {
     @Id
     private long guildId;
 
+    @Column
     private long randomAnimeCharacterChannelId;
 
     public long getGuildId() {
