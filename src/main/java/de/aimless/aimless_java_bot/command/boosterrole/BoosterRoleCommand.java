@@ -13,9 +13,10 @@ public class BoosterRoleCommand {
         SubcommandData addRoleSubcommand = new AddRoleCommand().roleCommandData();
         SubcommandData removeRoleSubcommand = new RemoveRoleCommand().roleCommandData();
         SubcommandData listRoleSubcommand = new ListRoleCommand().roleCommandData();
+        SubcommandData setRoleSubcommand = new SetBoosterRoleCommand().roleCommandData();
 
         return Commands.slash(CommandName.BOOSTERROLE.getName().toLowerCase(), "Manage booster roles")
-                .addSubcommands(addRoleSubcommand, removeRoleSubcommand, listRoleSubcommand)
+                .addSubcommands(addRoleSubcommand, removeRoleSubcommand, listRoleSubcommand, setRoleSubcommand)
                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR));
     }
 }

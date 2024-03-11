@@ -9,6 +9,6 @@ public interface BoosterRoleRepository extends JpaRepository<BoosterRole, Long> 
 
     List<BoosterRole> findAllByGuildId(long idLong);
 
-    List<Long> findAllIdsByGuildId(long idLong);
+    List<Long> findAllIdsByGuildIdAndAutoAssignableIsFalse(long idLong);
 
 }

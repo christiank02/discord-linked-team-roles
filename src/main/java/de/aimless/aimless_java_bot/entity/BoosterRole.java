@@ -10,6 +10,7 @@ public class BoosterRole {
     private long id;
     private String name;
     private long guildId;
+    private boolean autoAssignable;
 
     public long getId() {
         return id;
@@ -33,5 +34,13 @@ public class BoosterRole {
 
     public void setGuildId(long guildId) {
         this.guildId = guildId;
+    }
+
+    public boolean isAutoAssignable() {
+        return autoAssignable;
+    }
+
+    public void setAutoAssignable(boolean autoAssignable) {
+        this.autoAssignable = autoAssignable;
     }
 }
