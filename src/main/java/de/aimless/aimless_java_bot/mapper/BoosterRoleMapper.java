@@ -5,11 +5,12 @@ import net.dv8tion.jda.api.entities.Role;
 
 public class BoosterRoleMapper {
 
-    public BoosterRole map(Role role, long guildId) {
+    public BoosterRole map(Role role, long guildId, boolean autoAssignable) {
         BoosterRole boosterRole = new BoosterRole();
         boosterRole.setId(role.getIdLong());
         boosterRole.setName(role.getName());
         boosterRole.setGuildId(guildId);
+        boosterRole.setAutoAssignable(autoAssignable);
         return boosterRole;
     }
 }

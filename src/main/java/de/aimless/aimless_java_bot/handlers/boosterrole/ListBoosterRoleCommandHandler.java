@@ -36,19 +36,26 @@ public class ListBoosterRoleCommandHandler extends AbstractCommandHandler {
             return;
         }
 
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Booster Roles");
+        embedBuilder.setColor(Color.CYAN); // You can change the color to your preference
+        embedBuilder.setDescription("List of booster roles and their auto-assignable status:");
+
+        StringBuilder tableContent = new StringBuilder();
+        tableContent.append("```\n");
+        tableContent.append(String.format("%-20s | Auto Assignable%n", "Role Name"));
+
         List<BoosterRole> boosterRoles = boosterRoleRepository.findAllByGuildId(guild.getIdLong());
+        for (BoosterRole linkedRole : boosterRoles) {
+            tableContent.append(String.format("%-20s | %s%n", linkedRole.getName(), linkedRole.isAutoAssignable() ? "Yes" : "No"));
+        }
 
-        StringBuilder replyContent = new StringBuilder("```");
-        replyContent.append("Role Name \n");
-        boosterRoles.forEach(linkedRole ->
-                replyContent.append(linkedRole.getName()).append("\n"));
-        replyContent.append("```");
+        tableContent.append("```");
 
-        event.getHook().sendMessageEmbeds(new EmbedBuilder()
-                        .setTitle("Booster roles")
-                        .setDescription(replyContent.toString())
-                        .setColor(Color.CYAN)
-                        .build())
+        embedBuilder.addField("Roles", tableContent.toString(), false);
+
+        event.getHook()
+                .sendMessageEmbeds(embedBuilder.build())
                 .setEphemeral(true)
                 .queue();
     }
