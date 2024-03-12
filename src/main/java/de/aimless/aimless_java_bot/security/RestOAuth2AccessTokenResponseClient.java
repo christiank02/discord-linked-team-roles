@@ -72,6 +72,7 @@ public class RestOAuth2AccessTokenResponseClient implements OAuth2AccessTokenRes
         @JsonProperty("refresh_token")
         private String refreshToken;
 
+        @JsonProperty("scope")
         private String scope;
 
         public AccessResponse() {}

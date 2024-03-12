@@ -40,7 +40,7 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login/oauth2/code/discord", "/oauth2/authorization/discord", "invite", "error").permitAll()
-                        .anyRequest().denyAll()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 ->
                         oauth2.tokenEndpoint(token ->

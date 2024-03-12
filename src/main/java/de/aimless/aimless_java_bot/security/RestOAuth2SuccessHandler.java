@@ -47,12 +47,11 @@ public class RestOAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = oAuth2AuthorizedClient.getAccessToken().getTokenValue();
 
         Map<String, Object> userAttributes = (Map<String, Object>) user.getAttributes().get("user");
-
         String userId = (String) userAttributes.get("id");
 
         Guild guild = jda.getGuildById(guildId);
         if (Objects.isNull(guild)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Something went wrong. Please try again.");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The guild could not be found. Please try again.");
             return;
         }
 
