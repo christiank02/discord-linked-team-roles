@@ -1,14 +1,14 @@
 package de.aimless.aimless_java_bot.http.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
 public class AnimeCharacterResponse {
-    private AnimeCharacter data;
 
-    // getters and setters
-    public AnimeCharacter getData() {
-        return data;
-    }
-
-    public void setData(AnimeCharacter data) {
-        this.data = data;
-    }
+    private Pagination pagination;
+    private List<AnimeCharacter> data;
 }

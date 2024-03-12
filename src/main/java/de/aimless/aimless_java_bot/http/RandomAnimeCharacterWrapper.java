@@ -8,89 +8,80 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 @Component
 public class RandomAnimeCharacterWrapper {
 
-    private static final String DEFAULT_IMAGE_URL = "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png";
     private static final Logger LOGGER = LoggerFactory.getLogger(RandomAnimeCharacterWrapper.class);
+    private static final String DEFAULT_IMAGE_URL = "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png";
+    private static final String NO_RESPONSE_FROM_API = "No response from the API";
+    private static final int CACHED_TOTAL_PAGES = 1000;
 
     private final RestTemplate restTemplate;
+    private final Random random = new Random();
 
     public RandomAnimeCharacterWrapper(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    /**
-     * Will get a random anime character from the API and return it.
-     *
-     * @return random anime character or null if no response from the API
-     */
-    public AnimeCharacter getRandomAnimeCharacter() {
-        String url = RandomAnimeCharacterRoute.GET_RANDOM_ANIME_CHARACTER.getRoute();
-        AnimeCharacterResponse response = fetchAnimeCharacterResponse(url);
+    private Optional<AnimeCharacterResponse> getTopAnimeCharacters(int page) {
+        String url = RandomAnimeCharacterRoute.GET_TOP_ANIME_CHARACTERS.getRoute();
+        AnimeCharacterResponse response = fetchAnimeCharactersResponse(url, page);
 
-        if (response == null) {
-            return null;
-        }
-
-        AnimeCharacter character = response.getData();
-        character = ensureCharacterHasImageUrl(character, url);
-
-        return character;
+        return Optional.ofNullable(response);
     }
 
-    private AnimeCharacterResponse fetchAnimeCharacterResponse(String url) {
-        AnimeCharacterResponse response = restTemplate.getForObject(url, AnimeCharacterResponse.class);
+    private AnimeCharacterResponse fetchAnimeCharactersResponse(String url, int limit) {
+        String formattedUrl = String.format("%s?page=%d", url, limit);
+        AnimeCharacterResponse response = restTemplate.getForObject(formattedUrl, AnimeCharacterResponse.class);
 
         if (Objects.isNull(response)) {
-            LOGGER.warn("No response from the API");
+            LOGGER.warn(NO_RESPONSE_FROM_API);
         }
 
         return response;
     }
 
-    /**
-     * Will get a specified number of random anime characters from the API and return them.
-     *
-     * @param size the number of random anime characters to generate
-     * @return a list of random anime characters or an empty list if no response from the API
-     */
-    public List<AnimeCharacter> getRandomAnimeCharacters(int size) {
-        List<AnimeCharacter> characters = new ArrayList<>();
+    private Optional<AnimeCharacter> getRandomAnimeCharacter() {
+        int page = random.nextInt(CACHED_TOTAL_PAGES) + 1;
+        Optional<AnimeCharacterResponse> randomCharacterFromPage = getTopAnimeCharacters(page);
 
-        for (int i = 0; i < size; i++) {
-            AnimeCharacter character = getRandomAnimeCharacter();
-            if (character != null) {
-                characters.add(character);
-            } else {
-                LOGGER.warn("No response from the API for request number {}", i + 1);
-            }
+        if (randomCharacterFromPage.isPresent()) {
+            List<AnimeCharacter> randomCharacters = randomCharacterFromPage.get().getData();
+            int randomCharacterIndex = random.nextInt(randomCharacterFromPage.get().getPagination().getItems().getOrDefault("count", 1));
+
+            return Optional.of(randomCharacters.get(randomCharacterIndex));
         }
 
-        return characters;
+        return Optional.empty();
     }
 
-    private AnimeCharacter ensureCharacterHasImageUrl(AnimeCharacter character, String url) {
-        String imageUrl = character.getImages().getJpg().getImage_url();
-        int retryCount = 0;
+    public List<AnimeCharacter> getRandomAnimeCharacters(int size) {
+        return IntStream.range(0, size)
+                .parallel()
+                .mapToObj(i -> getRandomCharacterWithImage())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
 
-        while ((imageUrl == null || imageUrl.isEmpty() || imageUrl.equals(DEFAULT_IMAGE_URL)) && retryCount < 5) {
-            LOGGER.warn("Empty image URL, retrying...");
-            AnimeCharacterResponse response = restTemplate.getForObject(url, AnimeCharacterResponse.class);
+    private boolean isValidImageUrl(String imageUrl) {
+        return imageUrl != null && !imageUrl.isEmpty() && !imageUrl.equals(DEFAULT_IMAGE_URL);
+    }
 
-            if (Objects.isNull(response)) {
-                LOGGER.warn("No response from the API");
-                return null;
-            }
+    private Optional<AnimeCharacter> getRandomCharacterWithImage() {
+        Optional<AnimeCharacter> character;
+        String imageUrl;
 
-            character = response.getData();
-            imageUrl = character.getImages().getJpg().getImage_url();
-            retryCount++;
-        }
+        do {
+            character = getRandomAnimeCharacter();
+            imageUrl = character.map(c -> c.getImages().getJpg().getImage_url()).orElse("");
+        } while (!isValidImageUrl(imageUrl));
 
         return character;
     }
