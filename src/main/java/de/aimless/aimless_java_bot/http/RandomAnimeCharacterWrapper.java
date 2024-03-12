@@ -15,6 +15,7 @@ import java.util.Objects;
 @Component
 public class RandomAnimeCharacterWrapper {
 
+    private static final String DEFAULT_IMAGE_URL = "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png";
     private static final Logger LOGGER = LoggerFactory.getLogger(RandomAnimeCharacterWrapper.class);
 
     private final RestTemplate restTemplate;
@@ -30,14 +31,26 @@ public class RandomAnimeCharacterWrapper {
      */
     public AnimeCharacter getRandomAnimeCharacter() {
         String url = RandomAnimeCharacterRoute.GET_RANDOM_ANIME_CHARACTER.getRoute();
+        AnimeCharacterResponse response = fetchAnimeCharacterResponse(url);
+
+        if (response == null) {
+            return null;
+        }
+
+        AnimeCharacter character = response.getData();
+        character = ensureCharacterHasImageUrl(character, url);
+
+        return character;
+    }
+
+    private AnimeCharacterResponse fetchAnimeCharacterResponse(String url) {
         AnimeCharacterResponse response = restTemplate.getForObject(url, AnimeCharacterResponse.class);
 
         if (Objects.isNull(response)) {
             LOGGER.warn("No response from the API");
-            return null;
         }
 
-        return response.getData();
+        return response;
     }
 
     /**
@@ -59,5 +72,26 @@ public class RandomAnimeCharacterWrapper {
         }
 
         return characters;
+    }
+
+    private AnimeCharacter ensureCharacterHasImageUrl(AnimeCharacter character, String url) {
+        String imageUrl = character.getImages().getJpg().getImage_url();
+        int retryCount = 0;
+
+        while ((imageUrl == null || imageUrl.isEmpty() || imageUrl.equals(DEFAULT_IMAGE_URL)) && retryCount < 5) {
+            LOGGER.warn("Empty image URL, retrying...");
+            AnimeCharacterResponse response = restTemplate.getForObject(url, AnimeCharacterResponse.class);
+
+            if (Objects.isNull(response)) {
+                LOGGER.warn("No response from the API");
+                return null;
+            }
+
+            character = response.getData();
+            imageUrl = character.getImages().getJpg().getImage_url();
+            retryCount++;
+        }
+
+        return character;
     }
 }
