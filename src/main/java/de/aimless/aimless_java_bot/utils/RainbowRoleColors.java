@@ -8,16 +8,16 @@ import java.awt.Color;
 @Getter
 public enum RainbowRoleColors {
 
-    WHITE(Color.decode("#FFFFFF")),
-    DARK_RED(Color.decode("#7e0000")),
-    DARK_PURPLE(Color.decode("#4c00b0")),
-    LIGHT_PURPLE(Color.decode("#ce94ff")),
-    MEDIUM_PURPLE(Color.decode("#a756bc")),
-    LIGHT_PINK(Color.decode("#ffb3db")),
-    ROSE(Color.decode("#f4819f")),
-    LIGHT_GREEN(Color.decode("#9fd5c0")),
-    PEACH(Color.decode("#fbb1a4")),
-    SKIN_TONE(Color.decode("#fbb1a4"));
+    COLOR1(Color.decode("#F88FB0")),
+    COLOR2(Color.decode("#E1CEFF")),
+    COLOR3(Color.decode("#ceffdd")),
+    COLOR4(Color.decode("#c7e1f8")),
+    COLOR5(Color.decode("#d28080")),
+    COLOR6(Color.decode("#b8ffba")),
+    COLOR7(Color.decode("#f7cfa6")),
+    COLOR8(Color.decode("#ecfab3")),
+    COLOR9(Color.decode("#dadada")),
+    COLOR10(Color.decode("#c0f3f4"));
 
     private final Color color;
 
