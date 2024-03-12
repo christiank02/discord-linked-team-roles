@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.http;
+package de.aimless.aimless_java_bot.http.route;
 
 import net.dv8tion.jda.api.requests.Route;
 

@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
-class GuildMemberUpdateBoostTimeEventHandlerTest {
+class GuildEntityMemberUpdateBoostTimeEventHandlerTest {
 
     @Mock
     private BoosterRoleRepository boosterRoleRepository;
