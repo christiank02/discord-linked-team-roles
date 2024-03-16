@@ -11,7 +11,7 @@ public class GuildEntity {
     private long guildId;
 
     @Column
-    private long joinMessageChannelId;
+    private Long joinMessageChannelId;
 
     @Column
     private long randomAnimeCharacterChannelId;
@@ -24,11 +24,11 @@ public class GuildEntity {
         this.guildId = guildId;
     }
 
-    public long getJoinMessageChannelId() {
+    public Long getJoinMessageChannelId() {
         return joinMessageChannelId;
     }
 
-    public void setJoinMessageChannelId(long joinMessageChannelId) {
+    public void setJoinMessageChannelId(Long joinMessageChannelId) {
         this.joinMessageChannelId = joinMessageChannelId;
     }
 

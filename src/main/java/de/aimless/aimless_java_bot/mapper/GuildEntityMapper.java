@@ -10,4 +10,11 @@ public class GuildEntityMapper {
         guildEntity.setRandomAnimeCharacterChannelId(randomAnimeCharacterChannelId);
         return guildEntity;
     }
+
+    public GuildEntity mapWithJoinMessageChannel(long guildId, long joinMessageChannelId) {
+        GuildEntity guildEntity = new GuildEntity();
+        guildEntity.setGuildId(guildId);
+        guildEntity.setJoinMessageChannelId(joinMessageChannelId);
+        return guildEntity;
+    }
 }
