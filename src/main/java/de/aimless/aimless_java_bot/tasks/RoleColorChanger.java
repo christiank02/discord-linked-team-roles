@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @Service
 public class RoleColorChanger {
@@ -38,17 +38,18 @@ public class RoleColorChanger {
     // Maybe change this to a more efficient way of changing the color of the roles
     @Scheduled(fixedRate = MINUTES_IN_MILLIS)
     public void changeColor() {
-        boosterRoleRepository.findAll().stream()
-                .map(this::processBoosterRole)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .forEach(role -> {
-                    try {
-                        changeColor(role);
-                    } catch (InsufficientPermissionException | HierarchyException ex) {
-                        LOGGER.warn("Error {} while changing color for role {} with id {}", ex.getClass(), role.getName(), role.getId());
-                    }
-                });
+        List<BoosterRole> boosterRoleList = boosterRoleRepository.findAll();
+        for (BoosterRole boosterRole : boosterRoleList) {
+            Optional<Role> optionalRole = processBoosterRole(boosterRole);
+            if (optionalRole.isPresent()) {
+                Role role = optionalRole.get();
+                try {
+                    changeColor(role);
+                } catch (InsufficientPermissionException | HierarchyException ex) {
+                    LOGGER.warn("Error {} while changing color for role {} with id {}", ex.getClass(), role.getName(), role.getId());
+                }
+            }
+        }
     }
 
     private Optional<Role> processBoosterRole(BoosterRole boosterRole) {
@@ -68,7 +69,7 @@ public class RoleColorChanger {
     private void changeColor(Role role) throws InsufficientPermissionException, HierarchyException {
         RainbowRoleColors color = getRandomColor();
         try {
-            role.getManager().setColor(color.getColor().getRGB()).timeout(30, TimeUnit.MINUTES).complete();
+            role.getManager().setColor(color.getColor().getRGB()).timeout(30, TimeUnit.MINUTES).completeAfter(1, TimeUnit.MINUTES);
         } catch (Exception e) {
             LOGGER.warn("Error while changing color for role {} with id {}. Error: {}", role.getName(), role.getId(), e.getMessage());
         }
