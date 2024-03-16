@@ -39,15 +39,17 @@ public class GuildMemberJoinEventHandler extends ListenerAdapter {
         guildRepository.findById(eventGuild.getIdLong())
                 .filter(guildEntity -> Objects.nonNull(guildEntity.getJoinMessageChannelId()))
                 .map(guildEntity -> eventGuild.getTextChannelById(guildEntity.getJoinMessageChannelId()))
-                .ifPresent(joinChannel -> sendWelcomeMessage(eventGuild, joinChannel));
+                .ifPresent(joinChannel -> sendWelcomeMessage(event, joinChannel));
     }
 
     // Send welcome message to the specified channel
-    private void sendWelcomeMessage(@NotNull Guild guild, @NotNull TextChannel joinChannel) {
+    private void sendWelcomeMessage(@NotNull GuildMemberJoinEvent event, @NotNull TextChannel joinChannel) {
+        Guild guild = event.getGuild();
         Optional.ofNullable(guild.getRulesChannel())
                 .ifPresent(rulesChannel -> {
                     EmbedBuilder welcomeMessageEmbed = createWelcomeMessageEmbed(guild, rulesChannel);
-                    joinChannel.sendMessageEmbeds(welcomeMessageEmbed.build()).queue();
+                    joinChannel.sendMessage(String.format("willkommen %s!", event.getMember().getAsMention())).complete();
+                    joinChannel.sendMessageEmbeds(welcomeMessageEmbed.build()).complete();
                 });
     }
 
