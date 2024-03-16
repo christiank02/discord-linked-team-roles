@@ -25,7 +25,7 @@ public class JDAConfiguration {
                 .setActivity(Activity.playing(".gg/yogiri"))
                 .addEventListeners(readyListener)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
                 .build();
 
         jda.awaitReady();
