@@ -2,6 +2,7 @@ package de.aimless.aimless_java_bot;
 
 import de.aimless.aimless_java_bot.command.RegisterMetaDataCommand;
 import de.aimless.aimless_java_bot.command.boosterrole.BoosterRoleCommand;
+import de.aimless.aimless_java_bot.command.joinmessage.JoinMessageCommand;
 import de.aimless.aimless_java_bot.command.linkedrole.RoleCommand;
 import de.aimless.aimless_java_bot.command.randomcharacter.RandomCharacterCommand;
 import net.dv8tion.jda.api.JDA;
@@ -39,9 +40,10 @@ public class DiscordBot extends ListenerAdapter {
         CommandData boosterRoleCommandData = new BoosterRoleCommand().roleCommandData();
         CommandData registerMetaDataCommandData = new RegisterMetaDataCommand().registerMetaDataCommandData();
         CommandData randomCharacterCommandData = new RandomCharacterCommand().roleCommandData();
+        CommandData joinMessageCommandData = new JoinMessageCommand().roleCommandData();
 
         jda.updateCommands()
-                .addCommands(roleCommandData, registerMetaDataCommandData, boosterRoleCommandData, randomCharacterCommandData)
+                .addCommands(roleCommandData, registerMetaDataCommandData, boosterRoleCommandData, randomCharacterCommandData, joinMessageCommandData)
                 .queue();
     }
 

@@ -28,7 +28,7 @@ public class SlashCommandInteractionEventHandler extends ListenerAdapter {
         }
 
         switch (command) {
-            case LINKEDROLE, BOOSTERROLE, RANDOMCHARACTER -> handleSubCommand(event, command);
+            case LINKEDROLE, BOOSTERROLE, RANDOMCHARACTER, JOINMESSAGE -> handleSubCommand(event, command);
             case REGISTERMETADATACOMMAND -> new RegisterMetaDataCommandHandler().handleCommand(event);
             default -> event.reply("Unknown command").setEphemeral(true).queue();
         }

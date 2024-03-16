@@ -11,4 +11,7 @@
     <changeSet id="018e2e20-d27e-7f67-89c6-86f20ef2db74" author="aimless">
         <sqlFile path="db/changelog/v0003.sql"/>
     </changeSet>
+    <changeSet id="018e3884-daaa-777b-8871-bb9c30e3976e" author="aimless">
+        <sqlFile path="db/changelog/v0004.sql"/>
+    </changeSet>
 </databaseChangeLog>

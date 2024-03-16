@@ -41,7 +41,7 @@ public class AimlessJavaBotApplication {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(RestTemplate restTemplate) {
+    public CommandLineRunner commandLineRunner() {
         return args -> {
             try {
                 bot.start();
