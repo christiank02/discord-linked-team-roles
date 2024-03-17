@@ -1,8 +1,8 @@
 package de.aimless.aimless_java_bot.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class GuildEntity {
@@ -15,6 +15,9 @@ public class GuildEntity {
 
     @Column
     private long randomAnimeCharacterChannelId;
+
+    @OneToMany(mappedBy = "userEntity")
+    private Set<UserGuildEntity> userGuilds;
 
     public long getGuildId() {
         return guildId;
@@ -38,5 +41,13 @@ public class GuildEntity {
 
     public void setRandomAnimeCharacterChannelId(long randomAnimeCharacterChannelId) {
         this.randomAnimeCharacterChannelId = randomAnimeCharacterChannelId;
+    }
+
+    public Set<UserGuildEntity> getUserGuilds() {
+        return userGuilds;
+    }
+
+    public void setUserGuilds(Set<UserGuildEntity> userGuilds) {
+        this.userGuilds = userGuilds;
     }
 }

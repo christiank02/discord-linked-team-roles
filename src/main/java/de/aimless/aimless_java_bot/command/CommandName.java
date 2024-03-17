@@ -17,7 +17,8 @@ public enum CommandName {
     REGISTERMETADATACOMMAND("registermetadata"),
     BOOSTERROLE("boosterrole"),
     RANDOMCHARACTER("kissmarrykill"),
-    JOINMESSAGE("joinmessage"),;
+    JOINMESSAGE("joinmessage"),
+    RAINBOWROLE("rainbowrole");
 
     private final String name;
 

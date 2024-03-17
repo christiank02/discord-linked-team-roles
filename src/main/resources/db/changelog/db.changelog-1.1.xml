@@ -14,4 +14,7 @@
     <changeSet id="018e3884-daaa-777b-8871-bb9c30e3976e" author="aimless">
         <sqlFile path="db/changelog/v0004.sql"/>
     </changeSet>
+    <changeSet id="018e4b39-fda6-705a-9741-66a2a0144a95" author="aimless">
+        <sqlFile path="db/changelog/v0005.sql"/>
+    </changeSet>
 </databaseChangeLog>
