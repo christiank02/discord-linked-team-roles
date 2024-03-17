@@ -68,7 +68,7 @@ public class RoleColorChanger {
     private void changeColor(Role role) throws InsufficientPermissionException, HierarchyException {
         RainbowRoleColors color = getRandomColor();
         try {
-            role.getManager().setColor(color.getColor().getRGB()).timeout(30, TimeUnit.MINUTES).completeAfter(1, TimeUnit.SECONDS);
+            role.getManager().setColor(color.getColor().getRGB()).timeout(30, TimeUnit.MINUTES).completeAfter(30, TimeUnit.SECONDS);
         } catch (Exception e) {
             LOGGER.warn("Error while changing color for role {} with id {}. Error: {}", role.getName(), role.getId(), e.getMessage());
         }
