@@ -1,6 +1,8 @@
 package de.aimless.aimless_java_bot.events;
 
+import de.aimless.aimless_java_bot.entity.UserGuildEntity;
 import de.aimless.aimless_java_bot.repository.BoosterRoleRepository;
+import de.aimless.aimless_java_bot.repository.UserGuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -16,13 +18,12 @@ import java.util.Objects;
 public class GuildMemberUpdateBoostTimeEventHandler extends ListenerAdapter {
 
     private final BoosterRoleRepository boosterRoleRepository;
+    private final UserGuildRepository userGuildRepository;
 
-    public GuildMemberUpdateBoostTimeEventHandler(BoosterRoleRepository boosterRoleRepository) {
+    public GuildMemberUpdateBoostTimeEventHandler(BoosterRoleRepository boosterRoleRepository, UserGuildRepository userGuildRepository) {
         this.boosterRoleRepository = boosterRoleRepository;
+        this.userGuildRepository = userGuildRepository;
     }
-
-    // TODO: Before assigning the booster role to the user, we have to check if the user has disabled the rainbow role
-    // TODO: Update the command handler for Rainbow role enabling to remove the booster role if the user has disabled the rainbow role
 
     @Override
     public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent event) {
@@ -46,9 +47,12 @@ public class GuildMemberUpdateBoostTimeEventHandler extends ListenerAdapter {
             return; // User is not boosting anymore
         }
 
+        boolean hasUserRainbowRoleEnabled = userGuildRepository.findByUserEntityIdAndGuildEntityGuildId(eventMember.getIdLong(), guild.getIdLong())
+                .map(UserGuildEntity::isRainbowRoleEnabled)
+                .orElse(true); // default value is true if the user has not set the value
 
         OffsetDateTime thirtyDaysBeforeNewBoost = newTimeBoosted.minusDays(30);
-        if (oldTimeBoosted.isAfter(thirtyDaysBeforeNewBoost) && eventMember.isBoosting()) {
+        if (oldTimeBoosted.isAfter(thirtyDaysBeforeNewBoost) && eventMember.isBoosting() && hasUserRainbowRoleEnabled) {
             guild.modifyMemberRoles(eventMember, roles, null).queue();
         }
     }
