@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class RoleColorChanger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoleColorChanger.class);
-    private static final long MINUTES_IN_MILLIS = 300000;
+    private static final long MINUTES_IN_MILLIS = 120000;
 
     private final BoosterRoleRepository boosterRoleRepository;
     private final JDA jda;
@@ -68,7 +68,7 @@ public class RoleColorChanger {
     private void changeColor(Role role) throws InsufficientPermissionException, HierarchyException {
         RainbowRoleColors color = getRandomColor();
         try {
-            role.getManager().setColor(color.getColor().getRGB()).timeout(30, TimeUnit.MINUTES).completeAfter(1, TimeUnit.MINUTES);
+            role.getManager().setColor(color.getColor().getRGB()).timeout(30, TimeUnit.MINUTES).completeAfter(1, TimeUnit.SECONDS);
         } catch (Exception e) {
             LOGGER.warn("Error while changing color for role {} with id {}. Error: {}", role.getName(), role.getId(), e.getMessage());
         }

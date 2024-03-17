@@ -119,10 +119,11 @@ public class RainbowRoleCommandHandler extends AbstractCommandHandler {
             return;
         }
 
-        List<Long> boosterRoles = boosterRoleRepository.findAllIdsByGuildId(guild.getIdLong());
+        List<Long> boosterRoles = boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsTrue(guild.getIdLong());
         List<Role> roles = boosterRoles.stream()
                 .map(guild::getRoleById)
                 .filter(Objects::nonNull)
+                .filter(role -> !role.isManaged())
                 .toList();
 
         guild.modifyMemberRoles(guildMember, null, roles).queue();
