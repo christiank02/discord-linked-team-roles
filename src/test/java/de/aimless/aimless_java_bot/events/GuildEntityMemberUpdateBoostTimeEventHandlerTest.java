@@ -54,7 +54,7 @@ class GuildEntityMemberUpdateBoostTimeEventHandlerTest {
         when(event.getOldTimeBoosted()).thenReturn(null);
 
         List<Long> boosterRoles = Arrays.asList(123L, 456L, 789L);
-        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsFalse(anyLong())).thenReturn(boosterRoles);
+        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsTrue(anyLong())).thenReturn(boosterRoles);
 
         handler.onGuildMemberUpdateBoostTime(event);
 
@@ -74,7 +74,7 @@ class GuildEntityMemberUpdateBoostTimeEventHandlerTest {
         when(event.getOldTimeBoosted()).thenReturn(OffsetDateTime.now().minusDays(15));
 
         List<Long> boosterRoles = Arrays.asList(123L, 456L, 789L);
-        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsFalse(anyLong())).thenReturn(boosterRoles);
+        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsTrue(anyLong())).thenReturn(boosterRoles);
         when(member.isBoosting()).thenReturn(true);
 
         // Mock the AuditableRestAction object
@@ -100,7 +100,7 @@ class GuildEntityMemberUpdateBoostTimeEventHandlerTest {
         when(event.getOldTimeBoosted()).thenReturn(OffsetDateTime.now().minusDays(15));
 
         List<Long> boosterRoles = Arrays.asList(123L, 456L, 789L);
-        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsFalse(anyLong())).thenReturn(boosterRoles);
+        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsTrue(anyLong())).thenReturn(boosterRoles);
         when(member.isBoosting()).thenReturn(true);
 
         // Mock the AuditableRestAction object
@@ -126,7 +126,7 @@ class GuildEntityMemberUpdateBoostTimeEventHandlerTest {
         when(event.getOldTimeBoosted()).thenReturn(OffsetDateTime.now().minusDays(15));
 
         List<Long> boosterRoles = Arrays.asList(123L, 456L, 789L);
-        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsFalse(anyLong())).thenReturn(boosterRoles);
+        when(boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsTrue(anyLong())).thenReturn(boosterRoles);
         when(member.isBoosting()).thenReturn(true);
 
         // Mock the UserGuildRepository object

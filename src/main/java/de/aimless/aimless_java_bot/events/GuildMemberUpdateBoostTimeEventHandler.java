@@ -35,7 +35,7 @@ public class GuildMemberUpdateBoostTimeEventHandler extends ListenerAdapter {
         }
 
         Guild guild = event.getGuild();
-        List<Long> boosterRoles = boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsFalse(guild.getIdLong());
+        List<Long> boosterRoles = boosterRoleRepository.findAllIdsByGuildIdAndAutoAssignableIsTrue(guild.getIdLong());
         List<Role> roles = boosterRoles.stream()
                 .map(guild::getRoleById)
                 .filter(Objects::nonNull)
