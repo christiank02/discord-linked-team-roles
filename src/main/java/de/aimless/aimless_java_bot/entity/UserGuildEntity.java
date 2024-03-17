@@ -10,11 +10,11 @@ public class UserGuildEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     @ManyToOne
-    @JoinColumn(name = "guildId")
+    @JoinColumn(name = "guild_id")
     private GuildEntity guildEntity;
 
     @Column(columnDefinition = "boolean default true")

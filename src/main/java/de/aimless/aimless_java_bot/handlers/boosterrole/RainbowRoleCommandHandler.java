@@ -56,11 +56,12 @@ public class RainbowRoleCommandHandler extends AbstractCommandHandler {
                 });
 
         // we need an user repository to get the user
-        UserGuildEntity userGuildEntity = userGuildRepository.findByUserEntityLikeAndGuildEntityLike(userEntity, guildEntity)
+        UserGuildEntity userGuildEntity = userGuildRepository.findByUserEntityAndGuildEntity(userEntity, guildEntity)
                 .orElseGet(() -> {
                     UserGuildEntity newUserGuild = new UserGuildEntity();
                     newUserGuild.setGuildEntity(guildEntity);
                     newUserGuild.setUserEntity(userEntity);
+                    newUserGuild.setRainbowRoleEnabled(true);
                     return newUserGuild;
                 });
 

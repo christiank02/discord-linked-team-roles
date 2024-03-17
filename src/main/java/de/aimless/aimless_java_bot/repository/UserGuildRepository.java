@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface UserGuildRepository extends JpaRepository<UserGuildEntity, Long> {
 
-    Optional<UserGuildEntity> findByUserEntityLikeAndGuildEntityLike(UserEntity user, GuildEntity guild);
+    Optional<UserGuildEntity> findByUserEntityAndGuildEntity(UserEntity user, GuildEntity guild);
 
 }

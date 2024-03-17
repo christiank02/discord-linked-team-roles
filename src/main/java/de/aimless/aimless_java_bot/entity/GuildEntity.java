@@ -16,7 +16,7 @@ public class GuildEntity {
     @Column
     private long randomAnimeCharacterChannelId;
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "guildEntity")
     private Set<UserGuildEntity> userGuilds;
 
     public long getGuildId() {
