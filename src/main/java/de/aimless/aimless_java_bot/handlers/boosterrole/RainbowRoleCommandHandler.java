@@ -44,10 +44,29 @@ public class RainbowRoleCommandHandler extends AbstractCommandHandler {
     public void handleCommand(SlashCommandInteractionEvent event) {
         CommandUtils.acknowledgeAndDeferReply(event);
 
-        GuildEntity guildEntity;
+        GuildEntity guildEntity = getOrCreateGuildEntity(event);
+        if(Objects.isNull(guildEntity)) {
+            return;
+        }
+
+        UserEntity userEntity = getOrCreateUserEntity(event);
+        UserGuildEntity userGuildEntity = getOrCreateUserGuildEntity(userEntity, guildEntity);
+
+        boolean rainbowRoleEnabled = !userGuildEntity.isRainbowRoleEnabled();
+        userGuildEntity.setRainbowRoleEnabled(rainbowRoleEnabled);
+        userGuildRepository.save(userGuildEntity);
+
+        if (!rainbowRoleEnabled) {
+            handleRainbowRoleDisabled(event, guildEntity, userEntity);
+        }
+
+        sendReplyMessage(event, rainbowRoleEnabled);
+    }
+
+    private GuildEntity getOrCreateGuildEntity(SlashCommandInteractionEvent event) {
         try {
             Guild guild = CommandUtils.getGuildOrThrow(event);
-            guildEntity = guildRepository.findById(guild.getIdLong())
+            return guildRepository.findById(guild.getIdLong())
                     .orElseGet(() -> {
                         GuildEntity newGuildEntity = new GuildEntity();
                         newGuildEntity.setGuildId(guild.getIdLong());
@@ -55,19 +74,22 @@ public class RainbowRoleCommandHandler extends AbstractCommandHandler {
                     });
         } catch (IllegalStateException e) {
             event.getHook().sendMessage(e.getMessage()).queue();
-            return;
+            return null;
         }
+    }
 
+    private UserEntity getOrCreateUserEntity(SlashCommandInteractionEvent event) {
         long userId = event.getUser().getIdLong();
-        UserEntity userEntity = userEntityRepository.findById(userId)
+        return userEntityRepository.findById(userId)
                 .orElseGet(() -> {
                     UserEntity newUserEntity = new UserEntity();
                     newUserEntity.setId(userId);
                     return userEntityRepository.save(newUserEntity);
                 });
+    }
 
-        // we need an user repository to get the user
-        UserGuildEntity userGuildEntity = userGuildRepository.findByUserEntityAndGuildEntity(userEntity, guildEntity)
+    private UserGuildEntity getOrCreateUserGuildEntity(UserEntity userEntity, GuildEntity guildEntity) {
+        return userGuildRepository.findByUserEntityAndGuildEntity(userEntity, guildEntity)
                 .orElseGet(() -> {
                     UserGuildEntity newUserGuild = new UserGuildEntity();
                     newUserGuild.setGuildEntity(guildEntity);
@@ -75,40 +97,38 @@ public class RainbowRoleCommandHandler extends AbstractCommandHandler {
                     newUserGuild.setRainbowRoleEnabled(true);
                     return newUserGuild;
                 });
+    }
 
-        boolean rainbowRoleEnabled = !userGuildEntity.isRainbowRoleEnabled();
-        userGuildEntity.setRainbowRoleEnabled(rainbowRoleEnabled);
-        userGuildRepository.save(userGuildEntity);
+    private void handleRainbowRoleDisabled(SlashCommandInteractionEvent event, GuildEntity guildEntity, UserEntity userEntity) {
+        Guild guild = jda.getGuildById(guildEntity.getGuildId());
 
-        if (!rainbowRoleEnabled) {
-            Guild guild = jda.getGuildById(guildEntity.getGuildId());
-
-            if (Objects.isNull(guild)) {
-                event.getHook()
-                        .sendMessage("Error while disabling the rainbow role. Please try again later.")
-                        .setEphemeral(true)
-                        .queue();
-                return;
-            }
-
-            Member guildMember = guild.getMemberById(userId);
-            if (Objects.isNull(guildMember)) {
-                event.getHook()
-                        .sendMessage("Error while disabling the rainbow role. Please try again later.")
-                        .setEphemeral(true)
-                        .queue();
-                return;
-            }
-
-            List<Long> boosterRoles = boosterRoleRepository.findAllIdsByGuildId(guild.getIdLong());
-            List<Role> roles = boosterRoles.stream()
-                    .map(guild::getRoleById)
-                    .filter(Objects::nonNull)
-                    .toList();
-
-            guild.modifyMemberRoles(guildMember, null, roles).queue();
+        if (Objects.isNull(guild)) {
+            event.getHook()
+                    .sendMessage("Error while disabling the rainbow role. Please try again later.")
+                    .setEphemeral(true)
+                    .queue();
+            return;
         }
 
+        Member guildMember = guild.getMemberById(userEntity.getId());
+        if (Objects.isNull(guildMember)) {
+            event.getHook()
+                    .sendMessage("Error while disabling the rainbow role. Please try again later.")
+                    .setEphemeral(true)
+                    .queue();
+            return;
+        }
+
+        List<Long> boosterRoles = boosterRoleRepository.findAllIdsByGuildId(guild.getIdLong());
+        List<Role> roles = boosterRoles.stream()
+                .map(guild::getRoleById)
+                .filter(Objects::nonNull)
+                .toList();
+
+        guild.modifyMemberRoles(guildMember, null, roles).queue();
+    }
+
+    private void sendReplyMessage(SlashCommandInteractionEvent event, boolean rainbowRoleEnabled) {
         String replyMessage = rainbowRoleEnabled ? "You have enabled the rainbow role for yourself." : "You have disabled the rainbow role for yourself.";
         event.getHook()
                 .sendMessage(replyMessage)
