@@ -1,10 +1,6 @@
 package de.aimless.aimless_java_bot;
 
-import de.aimless.aimless_java_bot.command.RegisterMetaDataCommand;
-import de.aimless.aimless_java_bot.command.boosterrole.BoosterRoleCommand;
-import de.aimless.aimless_java_bot.command.joinmessage.JoinMessageCommand;
-import de.aimless.aimless_java_bot.command.linkedrole.RoleCommand;
-import de.aimless.aimless_java_bot.command.randomcharacter.RandomCharacterCommand;
+import de.aimless.aimless_java_bot.command.SlashCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -12,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 
 @Component
 public class DiscordBot extends ListenerAdapter {
@@ -36,18 +33,28 @@ public class DiscordBot extends ListenerAdapter {
     }
 
     private void registerSlashCommands(JDA jda) {
-        CommandData roleCommandData = new RoleCommand().roleCommandData();
-        CommandData boosterRoleCommandData = new BoosterRoleCommand().roleCommandData();
-        CommandData registerMetaDataCommandData = new RegisterMetaDataCommand().registerMetaDataCommandData();
-        CommandData randomCharacterCommandData = new RandomCharacterCommand().roleCommandData();
-        CommandData joinMessageCommandData = new JoinMessageCommand().roleCommandData();
+        List<CommandData> commands = getSlashCommands().stream()
+                .map(SlashCommand::getCommandData)
+                .toList();
 
         jda.updateCommands()
-                .addCommands(roleCommandData, registerMetaDataCommandData, boosterRoleCommandData, randomCharacterCommandData, joinMessageCommandData)
+                .addCommands(commands)
                 .queue();
     }
 
+    /**
+     * Returns all beans of type {@link ListenerAdapter} from the application context
+     * @return all beans of type {@link ListenerAdapter}
+     */
     public Collection<ListenerAdapter> getListeners() {
         return applicationContext.getBeansOfType(ListenerAdapter.class).values();
+    }
+
+    /**
+     * Returns all beans of type {@link SlashCommand} from the application context
+     * @return all beans of type {@link SlashCommand}
+     */
+    public Collection<SlashCommand> getSlashCommands() {
+        return applicationContext.getBeansOfType(SlashCommand.class).values();
     }
 }

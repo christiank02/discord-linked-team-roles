@@ -1,15 +1,19 @@
 package de.aimless.aimless_java_bot.command.linkedrole;
 
 import de.aimless.aimless_java_bot.command.CommandName;
+import de.aimless.aimless_java_bot.command.SlashCommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.springframework.stereotype.Component;
 
-public class RoleCommand {
+@Component
+public class RoleCommand implements SlashCommand {
 
-    public CommandData roleCommandData() {
+    @Override
+    public CommandData getCommandData() {
         SubcommandData addRoleSubcommand = new AddRoleCommand().roleCommandData();
         SubcommandData removeRoleSubcommand = new RemoveRoleCommand().roleCommandData();
         SubcommandData setRoleLevelSubcommand = new SetRoleLevelCommand().roleCommandData();

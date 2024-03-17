@@ -21,6 +21,9 @@ public class GuildMemberUpdateBoostTimeEventHandler extends ListenerAdapter {
         this.boosterRoleRepository = boosterRoleRepository;
     }
 
+    // TODO: Before assigning the booster role to the user, we have to check if the user has disabled the rainbow role
+    // TODO: Update the command handler for Rainbow role enabling to remove the booster role if the user has disabled the rainbow role
+
     @Override
     public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent event) {
         OffsetDateTime newTimeBoosted = event.getNewTimeBoosted();

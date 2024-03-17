@@ -29,7 +29,6 @@ public class RoleColorChanger {
     private final JDA jda;
     private final Random random = new Random();
 
-
     public RoleColorChanger(BoosterRoleRepository boosterRoleRepository, JDA jda) {
         this.boosterRoleRepository = boosterRoleRepository;
         this.jda = jda;
