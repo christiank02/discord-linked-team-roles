@@ -1,0 +1,2 @@
+ALTER TABLE UserGuildEntity
+ADD COLUMN boost_count INTEGER DEFAULT 0;

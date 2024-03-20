@@ -20,6 +20,9 @@ public class UserGuildEntity {
     @Column(columnDefinition = "boolean default true")
     private boolean rainbowRoleEnabled;
 
+    @Column(name = "boost_count", nullable = false, columnDefinition = "integer default 0")
+    private int boostCount;
+
     public Long getId() {
         return id;
     }
@@ -50,5 +53,13 @@ public class UserGuildEntity {
 
     public void setRainbowRoleEnabled(boolean rainbowRoleEnabled) {
         this.rainbowRoleEnabled = rainbowRoleEnabled;
+    }
+
+    public int getBoostCount() {
+        return boostCount;
+    }
+
+    public void setBoostCount(int boostCount) {
+        this.boostCount = boostCount;
     }
 }
