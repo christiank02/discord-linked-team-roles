@@ -78,7 +78,7 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
     private void handleError(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
         addErrorReaction(event);
         sendErrorMessage(event, countingGameEntity);
-        resetCountingNumber(countingGameEntity);
+        resetCountingInfo(countingGameEntity);
     }
 
     private boolean isMessageFromSameUser(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
@@ -116,8 +116,9 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
         event.getChannel().sendMessage(replyMessage).queue();
     }
 
-    private void resetCountingNumber(CountingGameEntity countingGameEntity) {
+    private void resetCountingInfo(CountingGameEntity countingGameEntity) {
         countingGameEntity.setLastNumber(0);
+        countingGameEntity.setLastUserId(null);
         countingGameRepository.save(countingGameEntity);
     }
 }
