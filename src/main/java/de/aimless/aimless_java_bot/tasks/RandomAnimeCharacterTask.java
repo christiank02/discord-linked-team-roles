@@ -34,7 +34,6 @@ public class RandomAnimeCharacterTask {
     }
 
     @Scheduled(cron = "0 0 */2 * * ?") // every 2 hours
-    //@Scheduled(cron = "0 * * * * ?") // every minute
     public void sendRandomAnimeCharacters() {
         List<AnimeCharacter> characters = randomAnimeCharacterWrapper.getRandomAnimeCharacters(3);
 

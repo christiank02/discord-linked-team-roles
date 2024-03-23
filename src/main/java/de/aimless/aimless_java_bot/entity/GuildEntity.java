@@ -14,6 +14,9 @@ public class GuildEntity {
     private Long joinMessageChannelId;
 
     @Column
+    private Long countingChannelId;
+
+    @Column
     private long randomAnimeCharacterChannelId;
 
     @OneToMany(mappedBy = "guildEntity")
@@ -33,6 +36,14 @@ public class GuildEntity {
 
     public void setJoinMessageChannelId(Long joinMessageChannelId) {
         this.joinMessageChannelId = joinMessageChannelId;
+    }
+
+    public Long getCountingChannelId() {
+        return countingChannelId;
+    }
+
+    public void setCountingChannelId(Long countingChannelId) {
+        this.countingChannelId = countingChannelId;
     }
 
     public long getRandomAnimeCharacterChannelId() {

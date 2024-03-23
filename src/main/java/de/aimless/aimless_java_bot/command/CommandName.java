@@ -18,7 +18,8 @@ public enum CommandName {
     BOOSTERROLE("boosterrole"),
     RANDOMCHARACTER("kissmarrykill"),
     JOINMESSAGE("joinmessage"),
-    RAINBOWROLE("rainbowrole");
+    RAINBOWROLE("rainbowrole"),
+    COUNTING("counting");
 
     private final String name;
 
