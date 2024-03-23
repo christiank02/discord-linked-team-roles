@@ -1,9 +1,11 @@
 package de.aimless.aimless_java_bot.handlers.counting;
 
 import de.aimless.aimless_java_bot.command.CommandName;
+import de.aimless.aimless_java_bot.entity.CountingGameEntity;
 import de.aimless.aimless_java_bot.entity.GuildEntity;
 import de.aimless.aimless_java_bot.handlers.AbstractCommandHandler;
 import de.aimless.aimless_java_bot.mapper.GuildEntityMapper;
+import de.aimless.aimless_java_bot.repository.CountingGameRepository;
 import de.aimless.aimless_java_bot.repository.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
@@ -15,10 +17,12 @@ import java.util.Objects;
 @Component
 public class SetCountingChannelCommandHandler extends AbstractCommandHandler {
 
+    private final CountingGameRepository countingGameRepository;
     private final GuildRepository guildRepository;
     private final GuildEntityMapper guildEntityMapper;
 
-    public SetCountingChannelCommandHandler(GuildRepository guildRepository) {
+    public SetCountingChannelCommandHandler(CountingGameRepository countingGameRepository, GuildRepository guildRepository) {
+        this.countingGameRepository = countingGameRepository;
         this.guildRepository = guildRepository;
         this.guildEntityMapper = new GuildEntityMapper();
     }
@@ -48,17 +52,28 @@ public class SetCountingChannelCommandHandler extends AbstractCommandHandler {
 
     // Method to set the counting channel for a guild
     private void setCountingChannel(long guildId, long channelId) {
-        // set channel for guild. If it exists -> update, else create
-        guildRepository.findById(guildId).ifPresentOrElse(
-                guildEntity -> {
-                    guildEntity.setCountingChannelId(channelId);
-                    guildRepository.save(guildEntity);
-                },
-                () -> {
-                    GuildEntity guildEntity = guildEntityMapper.mapWithCountingChannel(guildId, channelId);
-                    guildRepository.save(guildEntity);
-                }
+        countingGameRepository.findByGuildGuildId(guildId).ifPresentOrElse(
+                countingGameEntity -> updateCountingChannel(countingGameEntity, channelId),
+                () -> createAndSetCountingChannel(guildId, channelId)
         );
+    }
+
+    private void updateCountingChannel(CountingGameEntity countingGameEntity, long channelId) {
+        countingGameEntity.setChannelId(channelId);
+        countingGameRepository.save(countingGameEntity);
+    }
+
+    private void createAndSetCountingChannel(long guildId, long channelId) {
+        CountingGameEntity countingGameEntity = new CountingGameEntity();
+        GuildEntity guildEntity = guildRepository.findById(guildId)
+                .orElseGet(() -> guildEntityMapper.mapWithCountingGame(guildId, countingGameEntity));
+
+        countingGameEntity.setGuild(guildEntity);
+        countingGameEntity.setChannelId(channelId);
+        countingGameRepository.save(countingGameEntity);
+
+        guildEntity.setCountingGameEntity(countingGameEntity);
+        guildRepository.save(guildEntity);
     }
 
     // Method to send a message

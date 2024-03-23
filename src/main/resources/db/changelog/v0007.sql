@@ -1,3 +1,8 @@
-ALTER TABLE guildentity
-    ADD COLUMN countingChannelId BIGINT DEFAULT NULL,
-    ADD COLUMN countingNumber int DEFAULT 0;
+CREATE TABLE IF NOT EXISTS countingGameEntity (
+                                                  id BIGSERIAL PRIMARY KEY,
+                                                  channelId BIGINT DEFAULT NULL,
+                                                  lastUserId BIGINT DEFAULT NULL,
+                                                  lastNumber INT DEFAULT 0,
+                                                  guild_id BIGINT,
+                                                  FOREIGN KEY (guild_id) REFERENCES GuildEntity(guildid)
+);

@@ -14,17 +14,13 @@ public class GuildEntity {
     private Long joinMessageChannelId;
 
     @Column
-    private Long countingChannelId;
-
-    @Column
     private long randomAnimeCharacterChannelId;
-
-    @Column
-    private int countingNumber;
-
 
     @OneToMany(mappedBy = "guildEntity")
     private Set<UserGuildEntity> userGuilds;
+
+    @OneToOne(mappedBy = "guild")
+    private CountingGameEntity countingGameEntity;
 
     public long getGuildId() {
         return guildId;
@@ -42,14 +38,6 @@ public class GuildEntity {
         this.joinMessageChannelId = joinMessageChannelId;
     }
 
-    public Long getCountingChannelId() {
-        return countingChannelId;
-    }
-
-    public void setCountingChannelId(Long countingChannelId) {
-        this.countingChannelId = countingChannelId;
-    }
-
     public long getRandomAnimeCharacterChannelId() {
         return randomAnimeCharacterChannelId;
     }
@@ -58,19 +46,19 @@ public class GuildEntity {
         this.randomAnimeCharacterChannelId = randomAnimeCharacterChannelId;
     }
 
-    public int getCountingNumber() {
-        return countingNumber;
-    }
-
-    public void setCountingNumber(int countingNumber) {
-        this.countingNumber = countingNumber;
-    }
-
     public Set<UserGuildEntity> getUserGuilds() {
         return userGuilds;
     }
 
     public void setUserGuilds(Set<UserGuildEntity> userGuilds) {
         this.userGuilds = userGuilds;
+    }
+
+    public CountingGameEntity getCountingGameEntity() {
+        return countingGameEntity;
+    }
+
+    public void setCountingGameEntity(CountingGameEntity countingGameEntity) {
+        this.countingGameEntity = countingGameEntity;
     }
 }

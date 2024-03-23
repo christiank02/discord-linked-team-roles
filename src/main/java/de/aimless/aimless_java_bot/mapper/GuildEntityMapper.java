@@ -1,5 +1,6 @@
 package de.aimless.aimless_java_bot.mapper;
 
+import de.aimless.aimless_java_bot.entity.CountingGameEntity;
 import de.aimless.aimless_java_bot.entity.GuildEntity;
 
 public class GuildEntityMapper {
@@ -18,10 +19,10 @@ public class GuildEntityMapper {
         return guildEntity;
     }
 
-    public GuildEntity mapWithCountingChannel(long guildId, long countingChannelId) {
+    public GuildEntity mapWithCountingGame(long guildId, CountingGameEntity countingGameEntity) {
         GuildEntity guildEntity = new GuildEntity();
         guildEntity.setGuildId(guildId);
-        guildEntity.setCountingChannelId(countingChannelId);
+        guildEntity.setCountingGameEntity(countingGameEntity);
         return guildEntity;
     }
 }

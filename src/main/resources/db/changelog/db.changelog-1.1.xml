@@ -20,7 +20,7 @@
     <changeSet id="018e52bd-495a-7882-90ee-f05bc93232c4" author="aimless">
         <sqlFile path="db/changelog/v0006.sql"/>
     </changeSet>
-    <changeSet id="2c07951e-b2d3-4f36-b537-a260c929c106" author="aimless">
+    <changeSet id="19dc4f79-bfd9-4135-88bc-befeafdc6403" author="aimless">
         <sqlFile path="db/changelog/v0007.sql"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,21 +1,23 @@
 package de.aimless.aimless_java_bot.events;
 
-import de.aimless.aimless_java_bot.entity.GuildEntity;
-import de.aimless.aimless_java_bot.repository.GuildRepository;
+import de.aimless.aimless_java_bot.entity.CountingGameEntity;
+import de.aimless.aimless_java_bot.repository.CountingGameRepository;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
 public class MessageReceivedEventHandler extends ListenerAdapter {
 
-    private final GuildRepository guildRepository;
+    private final CountingGameRepository countingGameRepository;
 
-    public MessageReceivedEventHandler(GuildRepository guildRepository) {
-        this.guildRepository = guildRepository;
+    public MessageReceivedEventHandler(CountingGameRepository countingGameRepository) {
+        this.countingGameRepository = countingGameRepository;
     }
 
     @Override
@@ -24,28 +26,28 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
             return;
         }
 
-        Optional<GuildEntity> optionalGuildEntity = getGuildEntity(event);
-        optionalGuildEntity.ifPresent(guildEntity -> handleCountingEvent(event, guildEntity));
+        Optional<CountingGameEntity> optionalGuildEntity = getGuildEntity(event);
+        optionalGuildEntity.ifPresent(countingGameEntity -> handleCountingEvent(event, countingGameEntity));
     }
 
     private boolean isBotMessage(MessageReceivedEvent event) {
         return event.getAuthor().isBot();
     }
 
-    private Optional<GuildEntity> getGuildEntity(MessageReceivedEvent event) {
+    private Optional<CountingGameEntity> getGuildEntity(MessageReceivedEvent event) {
         long guildId = event.getGuild().getIdLong();
-        return guildRepository.findById(guildId);
+        return countingGameRepository.findByGuildGuildId(guildId);
     }
 
-    private void handleCountingEvent(MessageReceivedEvent event, GuildEntity guildEntity) {
-        if (isCountingChannelMessage(event, guildEntity) && isNumericMessage(event)) {
+    private void handleCountingEvent(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+        if (isCountingChannelMessage(event, countingGameEntity) && isNumericMessage(event)) {
             int number = getNumberFromMessage(event);
-            handleNumberMessage(event, guildEntity, number);
+            handleNumberMessage(event, countingGameEntity, number);
         }
     }
 
-    private boolean isCountingChannelMessage(MessageReceivedEvent event, GuildEntity guildEntity) {
-        return event.getChannel().getIdLong() == guildEntity.getCountingChannelId();
+    private boolean isCountingChannelMessage(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+        return event.getChannel().getIdLong() == countingGameEntity.getChannelId();
     }
 
     private boolean isNumericMessage(MessageReceivedEvent event) {
@@ -56,27 +58,66 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
         return Integer.parseInt(event.getMessage().getContentRaw());
     }
 
-    private void handleNumberMessage(MessageReceivedEvent event, GuildEntity guildEntity, int number) {
-        if (number == guildEntity.getCountingNumber() + 1) {
-            updateCountingNumber(guildEntity, number);
+    private void handleNumberMessage(MessageReceivedEvent event, CountingGameEntity countingGameEntity, int number) {
+        if (isNextNumberAndDifferentUser(event, countingGameEntity, number)) {
+            handleValidNumber(event, countingGameEntity, number);
         } else {
-            sendErrorMessage(event, guildEntity);
-            resetCountingNumber(guildEntity);
+            handleError(event, countingGameEntity);
         }
     }
 
-    private void updateCountingNumber(GuildEntity guildEntity, int number) {
-        guildEntity.setCountingNumber(number);
-        guildRepository.save(guildEntity);
+    private boolean isNextNumberAndDifferentUser(MessageReceivedEvent event, CountingGameEntity countingGameEntity, int number) {
+        return number == countingGameEntity.getLastNumber() + 1 && !isMessageFromSameUser(event, countingGameEntity);
     }
 
-    private void sendErrorMessage(MessageReceivedEvent event, GuildEntity guildEntity) {
-        String replyMessage = String.format("%s HAT DIE REIHE ZERSTÖRT! DIE NÄCHSTE ZAHL IST *%d*. Falsche Zahl.", event.getAuthor().getAsMention(), guildEntity.getCountingNumber() + 1);
+    private void handleValidNumber(MessageReceivedEvent event, CountingGameEntity countingGameEntity, int number) {
+        updateCountingInfo(countingGameEntity, number, event);
+        approveCountingNumber(event);
+    }
+
+    private void handleError(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+        addErrorReaction(event);
+        sendErrorMessage(event, countingGameEntity);
+        resetCountingNumber(countingGameEntity);
+    }
+
+    private boolean isMessageFromSameUser(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+        if (Objects.isNull(countingGameEntity.getLastUserId())) {
+            return false;
+        }
+        return event.getAuthor().getIdLong() == countingGameEntity.getLastUserId();
+    }
+
+    private void updateCountingInfo(CountingGameEntity countingGameEntity, int number, MessageReceivedEvent event) {
+        countingGameEntity.setLastNumber(number);
+        countingGameEntity.setLastUserId(event.getAuthor().getIdLong());
+        countingGameRepository.save(countingGameEntity);
+    }
+
+    private void approveCountingNumber(MessageReceivedEvent event) {
+        event.getMessage()
+                .addReaction(Emoji.fromUnicode("U+2705"))
+                .queue();
+    }
+
+    private void addErrorReaction(MessageReceivedEvent event) {
+        event.getMessage()
+                .addReaction(Emoji.fromUnicode("U+274C"))
+                .queue();
+    }
+
+    private void sendErrorMessage(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+        String replyMessage;
+        if (isMessageFromSameUser(event, countingGameEntity)) {
+            replyMessage = String.format("%s HAT DIE REIHE BEI %d ZERSTÖRT!! Die nächste Zahl ist *1. Du darfst nicht zweimal hintereinander zählen.*", event.getAuthor().getAsMention(), countingGameEntity.getLastNumber());
+        } else {
+            replyMessage = String.format("%s HAT DIE REIHE ZERSTÖRT! DIE NÄCHSTE ZAHL IST *1. Falsche Zahl.*", event.getAuthor().getAsMention());
+        }
         event.getChannel().sendMessage(replyMessage).queue();
     }
 
-    private void resetCountingNumber(GuildEntity guildEntity) {
-        guildEntity.setCountingNumber(0);
-        guildRepository.save(guildEntity);
+    private void resetCountingNumber(CountingGameEntity countingGameEntity) {
+        countingGameEntity.setLastNumber(0);
+        countingGameRepository.save(countingGameEntity);
     }
 }

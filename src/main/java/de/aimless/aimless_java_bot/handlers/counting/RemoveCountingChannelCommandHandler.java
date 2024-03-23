@@ -2,7 +2,7 @@ package de.aimless.aimless_java_bot.handlers.counting;
 
 import de.aimless.aimless_java_bot.command.CommandName;
 import de.aimless.aimless_java_bot.handlers.AbstractCommandHandler;
-import de.aimless.aimless_java_bot.repository.GuildRepository;
+import de.aimless.aimless_java_bot.repository.CountingGameRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -12,11 +12,12 @@ import java.util.Objects;
 @Component
 public class RemoveCountingChannelCommandHandler extends AbstractCommandHandler {
 
-    private final GuildRepository guildRepository;
+    private final CountingGameRepository countingGameRepository;
+
     private static final Long ABSENCE_OF_CHANNEL = null; // Represents the absence of a join message channel
 
-    public RemoveCountingChannelCommandHandler(GuildRepository guildRepository) {
-        this.guildRepository = guildRepository;
+    public RemoveCountingChannelCommandHandler(CountingGameRepository countingGameRepository) {
+        this.countingGameRepository = countingGameRepository;
     }
 
     public void handleCommand(SlashCommandInteractionEvent event) {
@@ -40,10 +41,10 @@ public class RemoveCountingChannelCommandHandler extends AbstractCommandHandler 
 
     // Method to remove the counting channel for a guild
     private void removeCountingChannel(long guildId) {
-        guildRepository.findById(guildId).ifPresent(
-                guildEntity -> {
-                    guildEntity.setCountingChannelId(ABSENCE_OF_CHANNEL);
-                    guildRepository.save(guildEntity);
+        countingGameRepository.findById(guildId).ifPresent(
+                countingGameEntity -> {
+                    countingGameEntity.setChannelId(ABSENCE_OF_CHANNEL);
+                    countingGameRepository.save(countingGameEntity);
                 }
         );
     }
