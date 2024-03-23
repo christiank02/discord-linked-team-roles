@@ -17,4 +17,11 @@ public class GuildEntityMapper {
         guildEntity.setJoinMessageChannelId(joinMessageChannelId);
         return guildEntity;
     }
+
+    public GuildEntity mapWithCountingChannel(long guildId, long countingChannelId) {
+        GuildEntity guildEntity = new GuildEntity();
+        guildEntity.setGuildId(guildId);
+        guildEntity.setCountingChannelId(countingChannelId);
+        return guildEntity;
+    }
 }
