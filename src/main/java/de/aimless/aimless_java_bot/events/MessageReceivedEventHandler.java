@@ -109,9 +109,9 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
     private void sendErrorMessage(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
         String replyMessage;
         if (isMessageFromSameUser(event, countingGameEntity)) {
-            replyMessage = String.format("%s HAT DIE REIHE BEI %d ZERSTÖRT!! Die nächste Zahl ist *1. Du darfst nicht zweimal hintereinander zählen.*", event.getAuthor().getAsMention(), countingGameEntity.getLastNumber());
+            replyMessage = String.format("%s HAT DIE REIHE BEI %d ZERSTÖRT!! Die nächste Zahl ist **1. Du darfst nicht zweimal hintereinander zählen.**", event.getAuthor().getAsMention(), countingGameEntity.getLastNumber());
         } else {
-            replyMessage = String.format("%s HAT DIE REIHE ZERSTÖRT! DIE NÄCHSTE ZAHL IST *1. Falsche Zahl.*", event.getAuthor().getAsMention());
+            replyMessage = String.format("%s HAT DIE REIHE ZERSTÖRT! DIE NÄCHSTE ZAHL IST **1. Falsche Zahl.**", event.getAuthor().getAsMention());
         }
         event.getChannel().sendMessage(replyMessage).queue();
     }

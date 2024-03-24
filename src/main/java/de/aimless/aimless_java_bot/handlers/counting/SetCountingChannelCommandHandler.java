@@ -66,7 +66,11 @@ public class SetCountingChannelCommandHandler extends AbstractCommandHandler {
     private void createAndSetCountingChannel(long guildId, long channelId) {
         CountingGameEntity countingGameEntity = new CountingGameEntity();
         GuildEntity guildEntity = guildRepository.findById(guildId)
-                .orElseGet(() -> guildEntityMapper.mapWithCountingGame(guildId, countingGameEntity));
+                .orElseGet(() -> {
+                    GuildEntity newGuildEntity = new GuildEntity();
+                    newGuildEntity.setGuildId(guildId);
+                    return guildRepository.save(newGuildEntity);
+                });
 
         countingGameEntity.setGuild(guildEntity);
         countingGameEntity.setChannelId(channelId);
