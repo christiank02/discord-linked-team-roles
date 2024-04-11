@@ -18,6 +18,12 @@ public class CountingGameEntity {
     @Column
     private int lastNumber;
 
+    @Column
+    private int lastNumberBeforeReset;
+
+    @Column
+    private boolean pendingDecision;
+
     @OneToOne
     @JoinColumn(name = "guild_id")
     private GuildEntity guild;
@@ -52,6 +58,23 @@ public class CountingGameEntity {
 
     public void setLastNumber(int lastNumber) {
         this.lastNumber = lastNumber;
+    }
+
+
+    public int getLastNumberBeforeReset() {
+        return lastNumberBeforeReset;
+    }
+
+    public void setLastNumberBeforeReset(int lastNumberBeforeReset) {
+        this.lastNumberBeforeReset = lastNumberBeforeReset;
+    }
+
+    public Boolean getPendingDecision() {
+        return pendingDecision;
+    }
+
+    public void setPendingDecision(Boolean pendingDecision) {
+        this.pendingDecision = pendingDecision;
     }
 
     public GuildEntity getGuild() {

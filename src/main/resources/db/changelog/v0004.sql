@@ -1,2 +1,5 @@
-ALTER TABLE guildentity
-    ADD COLUMN joinMessageChannelId BIGINT DEFAULT NULL;
+CREATE TABLE guildentity (
+                           guildId BIGINT PRIMARY KEY,
+                           randomAnimeCharacterChannelId BIGINT DEFAULT NULL,
+                           joinMessageChannelId BIGINT DEFAULT NULL
+);

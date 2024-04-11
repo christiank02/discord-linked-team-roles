@@ -12,15 +12,23 @@
         <sqlFile path="db/changelog/v0003.sql"/>
     </changeSet>
     <changeSet id="018e3884-daaa-777b-8871-bb9c30e3976e" author="aimless">
+        <validCheckSum>any</validCheckSum>
         <sqlFile path="db/changelog/v0004.sql"/>
     </changeSet>
     <changeSet id="018e4b84-8d13-7c2f-80b0-0687706056c8" author="aimless">
         <sqlFile path="db/changelog/v0005.sql"/>
     </changeSet>
     <changeSet id="018e52bd-495a-7882-90ee-f05bc93232c4" author="aimless">
+        <validCheckSum>any</validCheckSum>
         <sqlFile path="db/changelog/v0006.sql"/>
     </changeSet>
     <changeSet id="19dc4f79-bfd9-4135-88bc-befeafdc6403" author="aimless">
         <sqlFile path="db/changelog/v0007.sql"/>
+    </changeSet>
+    <changeSet id="cb257d49-9518-4011-af0c-cda513c91e2e" author="aimless">
+        <sqlFile path="db/changelog/v0008.sql" />
+    </changeSet>
+    <changeSet id="d9d8d70c-1790-4db7-bd2f-a2e9d6095b88" author="aimless">
+        <sqlFile path="db/changelog/v0009.sql" />
     </changeSet>
 </databaseChangeLog>

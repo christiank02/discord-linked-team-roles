@@ -14,7 +14,7 @@ public class GuildEntity {
     private Long joinMessageChannelId;
 
     @Column
-    private long randomAnimeCharacterChannelId;
+    private Long randomAnimeCharacterChannelId;
 
     @OneToMany(mappedBy = "guildEntity")
     private Set<UserGuildEntity> userGuilds;

@@ -1,23 +1,38 @@
 package de.aimless.aimless_java_bot.events;
 
-import de.aimless.aimless_java_bot.entity.CountingGameEntity;
+import de.aimless.aimless_java_bot.entity.*;
 import de.aimless.aimless_java_bot.repository.CountingGameRepository;
+import de.aimless.aimless_java_bot.repository.GuildRepository;
+import de.aimless.aimless_java_bot.repository.UserEntityRepository;
+import de.aimless.aimless_java_bot.repository.UserGuildRepository;
+import de.aimless.aimless_java_bot.utils.CountingAbility;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.awt.Color;
+import java.util.*;
 
 @Component
 public class MessageReceivedEventHandler extends ListenerAdapter {
 
     private final CountingGameRepository countingGameRepository;
+    private final UserGuildRepository userGuildEntityRepository;
+    private final UserEntityRepository userEntityRepository;
+    private final GuildRepository guildRepository;
+    private final Random random;
 
-    public MessageReceivedEventHandler(CountingGameRepository countingGameRepository) {
+    public MessageReceivedEventHandler(CountingGameRepository countingGameRepository, UserGuildRepository userGuildEntityRepository, UserEntityRepository userEntityRepository, GuildRepository guildRepository) {
         this.countingGameRepository = countingGameRepository;
+        this.userGuildEntityRepository = userGuildEntityRepository;
+        this.userEntityRepository = userEntityRepository;
+        this.guildRepository = guildRepository;
+        this.random = new Random();
     }
 
     @Override
@@ -61,6 +76,12 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
     private void handleNumberMessage(MessageReceivedEvent event, CountingGameEntity countingGameEntity, int number) {
         if (isNextNumberAndDifferentUser(event, countingGameEntity, number)) {
             handleValidNumber(event, countingGameEntity, number);
+            tryAssignRandomCountingGameAbility(event);
+
+            if (number == 1) {
+                countingGameEntity.setPendingDecision(false);
+                countingGameRepository.save(countingGameEntity);
+            }
         } else {
             handleError(event, countingGameEntity);
         }
@@ -75,10 +96,13 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
         approveCountingNumber(event);
     }
 
+    // update the messages
     private void handleError(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
         addErrorReaction(event);
         sendErrorMessage(event, countingGameEntity);
         resetCountingInfo(countingGameEntity);
+
+        handleAbilities(event, countingGameEntity);
     }
 
     private boolean isMessageFromSameUser(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
@@ -100,6 +124,26 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
                 .queue();
     }
 
+    private void handleAbilities(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+        countingGameEntity.setPendingDecision(true);
+        sendMessageEmbed(event);
+        countingGameRepository.save(countingGameEntity);
+    }
+
+    private void sendMessageEmbed(MessageReceivedEvent event) {
+        MessageEmbed embed = createEmbedMessage();
+        Button button = Button.primary(CountingAbility.StreakSaver.getButtonId(), "Use Ability");
+        event.getChannel().sendMessageEmbeds(embed).setActionRow(button).queue();
+    }
+
+    private MessageEmbed createEmbedMessage() {
+        return new EmbedBuilder()
+                .setTitle("Streak Saver Ability")
+                .setDescription("If you have a Streak Saver ability, you can use it to save the streak!")
+                .setColor(Color.RED)
+                .build();
+    }
+
     private void addErrorReaction(MessageReceivedEvent event) {
         event.getMessage()
                 .addReaction(Emoji.fromUnicode("U+274C"))
@@ -117,8 +161,78 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
     }
 
     private void resetCountingInfo(CountingGameEntity countingGameEntity) {
+        countingGameEntity.setLastNumberBeforeReset(countingGameEntity.getLastNumber());
         countingGameEntity.setLastNumber(0);
         countingGameEntity.setLastUserId(null);
         countingGameRepository.save(countingGameEntity);
+    }
+
+    private void tryAssignRandomCountingGameAbility(MessageReceivedEvent event) {
+        int randomNumber = generateRandomNumber(500);
+
+        // Assign a random counting ability if the random number is less than 10 (2% chance, when the range is 0 - 499)
+        if (randomNumber < 10) {
+            assignRandomCountingGameAbility(event);
+        }
+    }
+
+    private int generateRandomNumber(int bound) {
+        return random.nextInt(bound);
+    }
+
+    private void assignRandomCountingGameAbility(MessageReceivedEvent event) {
+        // Generate a random number within the range of the CountingAbility enum values
+        int randomIndex = new Random().nextInt(CountingAbility.values().length);
+
+        // Select a CountingAbility using the random number
+        CountingAbility randomAbility = CountingAbility.values()[randomIndex];
+
+        // get the UserGuildEntity and add the new CountingGameAbility to it
+        long userId = event.getAuthor().getIdLong();
+        long guildId = event.getGuild().getIdLong();
+
+        Optional<UserGuildEntity> optionalUserGuildEntity = userGuildEntityRepository.findByUserEntityIdAndGuildEntityGuildId(userId, guildId);
+        UserGuildEntity userGuildEntity = optionalUserGuildEntity.orElseGet(() -> createUserGuildEntity(userId, guildId));
+
+        userGuildEntity.getCountingGameAbilities().add(randomAbility);
+        userGuildEntityRepository.save(userGuildEntity);
+
+        sendAbilityAssignedMessage(event, randomAbility);
+    }
+
+    private void sendAbilityAssignedMessage(MessageReceivedEvent event, CountingAbility ability) {
+        MessageEmbed embed = new EmbedBuilder()
+                .setTitle("New Ability!")
+                .setDescription(String.format("Congratulations! You got the **%s** ability.", ability.getDisplayName()))
+                .addField("Description", ability.getDescription(), false)
+                .setColor(Color.GREEN)
+                .build();
+
+        event.getChannel().sendMessageEmbeds(embed).queue();
+    }
+
+    private @NotNull UserGuildEntity createUserGuildEntity(long userId, long guildId) {
+        // Retrieve or create UserEntity
+        UserEntity userEntity = userEntityRepository.findById(userId)
+                .orElseGet(() -> {
+                    UserEntity newUserEntity = new UserEntity();
+                    newUserEntity.setId(userId);
+                    return userEntityRepository.save(newUserEntity);
+                });
+
+        // Retrieve or create GuildEntity
+        GuildEntity guildEntity = guildRepository.findById(guildId)
+                .orElseGet(() -> {
+                    GuildEntity newGuildEntity = new GuildEntity();
+                    newGuildEntity.setGuildId(guildId);
+                    return guildRepository.save(newGuildEntity);
+                });
+
+        // Create new UserGuildEntity
+        UserGuildEntity newUserGuildEntity = new UserGuildEntity();
+        newUserGuildEntity.setUserEntity(userEntity);
+        newUserGuildEntity.setGuildEntity(guildEntity);
+
+        return newUserGuildEntity;
     }
 }
