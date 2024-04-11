@@ -203,7 +203,7 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
     private void sendAbilityAssignedMessage(MessageReceivedEvent event, CountingAbility ability) {
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("New Ability!")
-                .setDescription(String.format("Congratulations! You got the **%s** ability.", ability.getDisplayName()))
+                .setDescription(String.format("Congratulations, **%s**! You got the **%s** ability.", event.getAuthor().getEffectiveName(), ability.getDisplayName()))
                 .addField("Description", ability.getDescription(), false)
                 .setColor(Color.GREEN)
                 .build();
