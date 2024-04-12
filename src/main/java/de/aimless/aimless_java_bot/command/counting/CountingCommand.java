@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CountingCommand implements SlashCommand {
 
+    // add command to show all abilites for the servers counting game the user has
+    // name + description + count for same abilities
+
     @Override
     public CommandData getCommandData() {
         SubcommandData setChannelCommand = new SetChannelCommand().roleCommandData();
