@@ -61,7 +61,9 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
             handleNumberMessage(event, countingGameEntity, number);
         }
 
-        tryAssignRandomCountingGameAbility(event, countingGameEntity);
+        if(!event.getAuthor().isBot()) {
+            tryAssignRandomCountingGameAbility(event, countingGameEntity);
+        }
     }
 
     private boolean isCountingChannelMessage(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {

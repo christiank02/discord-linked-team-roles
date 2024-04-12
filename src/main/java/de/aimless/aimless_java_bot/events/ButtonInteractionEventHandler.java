@@ -1,5 +1,6 @@
 package de.aimless.aimless_java_bot.events;
 
+import de.aimless.aimless_java_bot.command.CommandName;
 import de.aimless.aimless_java_bot.entity.CountingGameEntity;
 import de.aimless.aimless_java_bot.entity.UserGuildEntity;
 import de.aimless.aimless_java_bot.repository.CountingGameRepository;
@@ -80,8 +81,7 @@ public class ButtonInteractionEventHandler extends ListenerAdapter {
         } else if (!hasPendingDecision) {
             event.getHook().sendMessage("Zu spät! Das Spiel geht bereits weiter!").setEphemeral(true).queue();
         } else {
-            //TODO: ADD MESSAGE TO SHOW USER WHICH ABILITIES THEY HAVE
-            event.getHook().sendMessage("Du besitzt die Fähigkeit nicht. Nutze %s um zu sehen welche Fähigkeiten du besitzt.").setEphemeral(true).queue();
+            event.getHook().sendMessage(String.format("Du besitzt diese Fähigkeit nicht. Nutze **/%s %s** um zu sehen welche Fähigkeiten du besitzt.", CommandName.COUNTING.getName(), CommandName.ME.getName())).setEphemeral(true).queue();
         }
     }
 
