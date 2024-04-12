@@ -14,6 +14,7 @@ public enum CommandName {
     REMOVE("remove"),
     SET("set"),
     LIST("list"),
+    ME("me"),
     REGISTERMETADATACOMMAND("registermetadata"),
     BOOSTERROLE("boosterrole"),
     RANDOMCHARACTER("kissmarrykill"),

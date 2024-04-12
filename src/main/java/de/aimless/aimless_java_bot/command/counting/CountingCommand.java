@@ -19,9 +19,12 @@ public class CountingCommand implements SlashCommand {
     public CommandData getCommandData() {
         SubcommandData setChannelCommand = new SetChannelCommand().roleCommandData();
         SubcommandData removeChannelCommand = new RemoveChannelCommand().roleCommandData();
+        SubcommandData listCommand = new ListCommand().roleCommandData();
+        SubcommandData meCommand = new MeCommand().roleCommandData();
 
         return Commands.slash(CommandName.COUNTING.getName().toLowerCase(), "Set the channel for the counting game.")
                 .addSubcommands(setChannelCommand, removeChannelCommand)
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR));
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR))
+                .addSubcommands(listCommand, meCommand);
     }
 }

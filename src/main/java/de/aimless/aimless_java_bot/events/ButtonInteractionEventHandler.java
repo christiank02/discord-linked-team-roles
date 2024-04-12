@@ -67,20 +67,21 @@ public class ButtonInteractionEventHandler extends ListenerAdapter {
     }
 
     private void sendDmErrorMessage(ButtonInteractionEvent event) {
-        event.getHook().sendMessage("You can't use abilities in DMs!").setEphemeral(true).queue();
+        event.getHook().sendMessage("Du kannst keine Fähigeiten in DMs verwenden!").setEphemeral(true).queue();
     }
 
     private void sendNoCountingGameErrorMessage(ButtonInteractionEvent event) {
-        event.getHook().sendMessage("No counting game found for this guild!").setEphemeral(true).queue();
+        event.getHook().sendMessage("Es existiert kein Counting Channel für diesen Server!").setEphemeral(true).queue();
     }
 
     private void handleUserGuildEntity(ButtonInteractionEvent event, CountingGameEntity countingGameEntity, boolean hasPendingDecision, UserGuildEntity userGuildEntity) {
         if (userGuildEntity.getCountingGameAbilities().contains(CountingAbility.StreakSaver) && hasPendingDecision) {
             handleStreakSaver(event, countingGameEntity, userGuildEntity);
         } else if (!hasPendingDecision) {
-            event.getHook().sendMessage("Too late! The pending decision has already been handled or expired").setEphemeral(true).queue();
+            event.getHook().sendMessage("Zu spät! Das Spiel geht bereits weiter!").setEphemeral(true).queue();
         } else {
-            event.getHook().sendMessage("You don't have the Streak Saver ability!").setEphemeral(true).queue();
+            //TODO: ADD MESSAGE TO SHOW USER WHICH ABILITIES THEY HAVE
+            event.getHook().sendMessage("Du besitzt die Fähigkeit nicht. Nutze %s um zu sehen welche Fähigkeiten du besitzt.").setEphemeral(true).queue();
         }
     }
 
@@ -92,7 +93,7 @@ public class ButtonInteractionEventHandler extends ListenerAdapter {
         userGuildEntity.getCountingGameAbilities().remove(CountingAbility.StreakSaver);
         userGuildRepository.save(userGuildEntity);
 
-        String replyMessage = String.format("Streak saved! Next number is %d", countingGameEntity.getLastNumberBeforeReset() + 1);
+        String replyMessage = String.format("SERIE GERETTET! DIE NÄCHSTE ZAHL IST **%d**", countingGameEntity.getLastNumberBeforeReset() + 1);
         event.getHook().sendMessage(replyMessage).queue();
     }
 }

@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum CountingAbility {
-    StreakSaver("Streak Saver", "Save the streak when a mistake is made","streak-saver");
+    StreakSaver("Streak Saver", "Rette die Serie, wenn ein Fehler gemacht wird","streak-saver");
 
     private final String displayName;
     private final String description;
