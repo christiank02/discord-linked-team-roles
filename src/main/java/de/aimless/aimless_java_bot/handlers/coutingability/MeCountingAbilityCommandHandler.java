@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.handlers.counting;
+package de.aimless.aimless_java_bot.handlers.coutingability;
 
 import de.aimless.aimless_java_bot.command.CommandName;
 import de.aimless.aimless_java_bot.entity.UserGuildEntity;
@@ -20,11 +20,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public class MeCountingChannelCommandHandler extends AbstractCommandHandler {
+public class MeCountingAbilityCommandHandler extends AbstractCommandHandler {
 
     private final UserGuildRepository userGuildRepository;
 
-    public MeCountingChannelCommandHandler(UserGuildRepository userGuildRepository) {
+    public MeCountingAbilityCommandHandler(UserGuildRepository userGuildRepository) {
         this.userGuildRepository = userGuildRepository;
     }
 
@@ -91,7 +91,7 @@ public class MeCountingChannelCommandHandler extends AbstractCommandHandler {
 
     @Override
     public boolean canHandle(CommandName commandName, CommandName subCommandName) {
-        return commandName == CommandName.COUNTING && subCommandName == CommandName.ME;
+        return commandName == CommandName.ABILITY && subCommandName == CommandName.ME;
     }
 
 }

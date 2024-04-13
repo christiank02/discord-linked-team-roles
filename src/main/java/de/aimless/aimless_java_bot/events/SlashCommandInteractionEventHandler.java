@@ -26,7 +26,7 @@ public class SlashCommandInteractionEventHandler extends ListenerAdapter {
             return;
         }
 
-        if (command == CommandName.LINKEDROLE || command == CommandName.BOOSTERROLE || command == CommandName.RANDOMCHARACTER || command == CommandName.JOINMESSAGE || command == CommandName.COUNTING) {
+        if (Objects.nonNull(event.getSubcommandName())) {
             handleSubCommand(event, command);
         } else {
             handleCommand(event, command);

@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.command.counting;
+package de.aimless.aimless_java_bot.command.countingAbility;
 
 import de.aimless.aimless_java_bot.command.CommandName;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;

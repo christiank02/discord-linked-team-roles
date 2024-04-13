@@ -1,4 +1,4 @@
-package de.aimless.aimless_java_bot.handlers.counting;
+package de.aimless.aimless_java_bot.handlers.coutingability;
 
 import de.aimless.aimless_java_bot.command.CommandName;
 import de.aimless.aimless_java_bot.handlers.AbstractCommandHandler;
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.Objects;
 
 @Component
-public class ListCountingChannelCommandHandler extends AbstractCommandHandler {
+public class ListCountingAbilityCommandHandler extends AbstractCommandHandler {
 
     public void handleCommand(SlashCommandInteractionEvent event) {
         if (event.isAcknowledged()) {
@@ -44,7 +44,7 @@ public class ListCountingChannelCommandHandler extends AbstractCommandHandler {
 
     @Override
     public boolean canHandle(CommandName commandName, CommandName subCommandName) {
-        return commandName == CommandName.COUNTING && subCommandName == CommandName.LIST;
+        return commandName == CommandName.ABILITY && subCommandName == CommandName.LIST;
     }
 
 }

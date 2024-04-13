@@ -1,9 +1,11 @@
 package de.aimless.aimless_java_bot.utils;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class CommandUtils {
 
@@ -35,5 +37,12 @@ public class CommandUtils {
             throw new IllegalStateException("Command must be used inside a guild");
         }
         return guild;
+    }
+
+    /**
+     * Delete message after a certain time
+     */
+    public static void deleteMessageAfterTime(Message message, int delay) {
+        message.delete().queueAfter(delay, TimeUnit.SECONDS);
     }
 }

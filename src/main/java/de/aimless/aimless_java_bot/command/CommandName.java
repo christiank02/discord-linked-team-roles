@@ -20,7 +20,8 @@ public enum CommandName {
     RANDOMCHARACTER("kissmarrykill"),
     JOINMESSAGE("joinmessage"),
     RAINBOWROLE("rainbowrole"),
-    COUNTING("counting");
+    COUNTING("counting"),
+    ABILITY("ability");
 
     private final String name;
 

@@ -81,7 +81,7 @@ public class ButtonInteractionEventHandler extends ListenerAdapter {
         } else if (!hasPendingDecision) {
             event.getHook().sendMessage("Zu spät! Das Spiel geht bereits weiter!").setEphemeral(true).queue();
         } else {
-            event.getHook().sendMessage(String.format("Du besitzt diese Fähigkeit nicht. Nutze **/%s %s** um zu sehen welche Fähigkeiten du besitzt.", CommandName.COUNTING.getName(), CommandName.ME.getName())).setEphemeral(true).queue();
+            event.getHook().sendMessage(String.format("Du besitzt diese Fähigkeit nicht. Nutze **/%s %s** um zu sehen welche Fähigkeiten du besitzt.", CommandName.ABILITY.getName(), CommandName.ME.getName())).setEphemeral(true).queue();
         }
     }
 

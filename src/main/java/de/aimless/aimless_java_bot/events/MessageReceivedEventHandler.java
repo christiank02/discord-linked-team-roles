@@ -1,26 +1,35 @@
 package de.aimless.aimless_java_bot.events;
 
-import de.aimless.aimless_java_bot.entity.*;
+import de.aimless.aimless_java_bot.entity.CountingGameEntity;
+import de.aimless.aimless_java_bot.entity.GuildEntity;
+import de.aimless.aimless_java_bot.entity.UserEntity;
+import de.aimless.aimless_java_bot.entity.UserGuildEntity;
 import de.aimless.aimless_java_bot.repository.CountingGameRepository;
 import de.aimless.aimless_java_bot.repository.GuildRepository;
 import de.aimless.aimless_java_bot.repository.UserEntityRepository;
 import de.aimless.aimless_java_bot.repository.UserGuildRepository;
+import de.aimless.aimless_java_bot.utils.CommandUtils;
 import de.aimless.aimless_java_bot.utils.CountingAbility;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.awt.Color;
-import java.util.*;
+import java.awt.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 @Component
 public class MessageReceivedEventHandler extends ListenerAdapter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageReceivedEventHandler.class);
 
     private final CountingGameRepository countingGameRepository;
     private final UserGuildRepository userGuildEntityRepository;
@@ -60,10 +69,6 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
             int number = getNumberFromMessage(event);
             handleNumberMessage(event, countingGameEntity, number);
         }
-
-        if(!event.getAuthor().isBot()) {
-            tryAssignRandomCountingGameAbility(event, countingGameEntity);
-        }
     }
 
     private boolean isCountingChannelMessage(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
@@ -86,6 +91,8 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
                 countingGameEntity.setPendingDecision(false);
                 countingGameRepository.save(countingGameEntity);
             }
+
+            tryAssignRandomCountingGameAbility(event);
         } else {
             handleError(event, countingGameEntity);
         }
@@ -171,12 +178,12 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
         countingGameRepository.save(countingGameEntity);
     }
 
-    private void tryAssignRandomCountingGameAbility(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+    private void tryAssignRandomCountingGameAbility(MessageReceivedEvent event) {
         int randomNumber = generateRandomNumber(500);
 
         // Assign a random counting ability if the random number is less than 10 (2% chance, when the range is 0 - 499)
         if (randomNumber < 10) {
-            assignRandomCountingGameAbility(event, countingGameEntity);
+            assignRandomCountingGameAbility(event);
         }
     }
 
@@ -184,7 +191,7 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
         return random.nextInt(bound);
     }
 
-    private void assignRandomCountingGameAbility(MessageReceivedEvent event, CountingGameEntity countingGameEntity) {
+    private void assignRandomCountingGameAbility(MessageReceivedEvent event) {
         // Generate a random number within the range of the CountingAbility enum values
         int randomIndex = new Random().nextInt(CountingAbility.values().length);
 
@@ -201,13 +208,11 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
         userGuildEntity.getCountingGameAbilities().add(randomAbility);
         userGuildEntityRepository.save(userGuildEntity);
 
-        sendAbilityAssignedMessage(event, randomAbility, countingGameEntity);
+        sendAbilityAssignedMessage(event, randomAbility);
     }
 
-    private void sendAbilityAssignedMessage(MessageReceivedEvent event, CountingAbility ability, CountingGameEntity countingGameEntity) {
-        TextChannel countingChannel = event.getGuild().getTextChannelById(countingGameEntity.getChannelId());
-
-        String embedMessage = String.format("Glückwunsch, **%s**! Du hast die **%s** Fähigkeit erhalten. \nDu kannst die Fähigkeit in %s verwenden.", event.getAuthor().getEffectiveName(), ability.getDisplayName(), countingChannel);
+    private void sendAbilityAssignedMessage(MessageReceivedEvent event, CountingAbility ability) {
+        String embedMessage = String.format("Glückwunsch, **%s**! Du hast die **%s** Fähigkeit erhalten.", event.getAuthor().getEffectiveName(), ability.getDisplayName());
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("Neue Counting Fähigkeit!")
                 .setDescription(embedMessage)
@@ -215,7 +220,8 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
                 .setColor(Color.GREEN)
                 .build();
 
-        event.getChannel().sendMessageEmbeds(embed).queue();
+        event.getChannel().sendMessageEmbeds(embed).queue((result) -> CommandUtils.deleteMessageAfterTime(result, 30),
+                (error) -> LOGGER.error("Failed to send ability assigned message", error));
     }
 
     private @NotNull UserGuildEntity createUserGuildEntity(long userId, long guildId) {
