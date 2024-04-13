@@ -179,9 +179,9 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
     }
 
     private void tryAssignRandomCountingGameAbility(MessageReceivedEvent event) {
-        int randomNumber = generateRandomNumber(500);
+        int randomNumber = generateRandomNumber(250);
 
-        // Assign a random counting ability if the random number is less than 10 (2% chance, when the range is 0 - 499)
+        // Assign a random counting ability if the random number is less than 10 (5% chance, when the range is 0 - 249)
         if (randomNumber < 10) {
             assignRandomCountingGameAbility(event);
         }
@@ -212,7 +212,7 @@ public class MessageReceivedEventHandler extends ListenerAdapter {
     }
 
     private void sendAbilityAssignedMessage(MessageReceivedEvent event, CountingAbility ability) {
-        String embedMessage = String.format("Glückwunsch, **%s**! Du hast die **%s** Fähigkeit erhalten.", event.getAuthor().getEffectiveName(), ability.getDisplayName());
+        String embedMessage = String.format("Glückwunsch, **%s**! Du hast die **%s** Fähigkeit erhalten.", event.getAuthor().getAsMention(), ability.getDisplayName());
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("Neue Counting Fähigkeit!")
                 .setDescription(embedMessage)

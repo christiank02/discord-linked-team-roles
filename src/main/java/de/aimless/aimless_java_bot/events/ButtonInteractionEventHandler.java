@@ -80,6 +80,7 @@ public class ButtonInteractionEventHandler extends ListenerAdapter {
             handleStreakSaver(event, countingGameEntity, userGuildEntity);
         } else if (!hasPendingDecision) {
             event.getHook().sendMessage("Zu spät! Das Spiel geht bereits weiter!").setEphemeral(true).queue();
+            event.getMessage().delete().queue();
         } else {
             event.getHook().sendMessage(String.format("Du besitzt diese Fähigkeit nicht. Nutze **/%s %s** um zu sehen welche Fähigkeiten du besitzt.", CommandName.ABILITY.getName(), CommandName.ME.getName())).setEphemeral(true).queue();
         }
@@ -93,7 +94,8 @@ public class ButtonInteractionEventHandler extends ListenerAdapter {
         userGuildEntity.getCountingGameAbilities().remove(CountingAbility.StreakSaver);
         userGuildRepository.save(userGuildEntity);
 
-        String replyMessage = String.format("SERIE GERETTET! DIE NÄCHSTE ZAHL IST **%d**", countingGameEntity.getLastNumberBeforeReset() + 1);
+        String replyMessage = String.format("%s HAT DIE SERIE GERETTET! DIE NÄCHSTE ZAHL IST **%d**", event.getUser().getAsMention(), countingGameEntity.getLastNumberBeforeReset() + 1);
         event.getHook().sendMessage(replyMessage).queue();
+        event.getMessage().delete().queue();
     }
 }
