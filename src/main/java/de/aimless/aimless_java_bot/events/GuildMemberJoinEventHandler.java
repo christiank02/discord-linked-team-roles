@@ -48,8 +48,8 @@ public class GuildMemberJoinEventHandler extends ListenerAdapter {
         Optional.ofNullable(guild.getRulesChannel())
                 .ifPresent(rulesChannel -> {
                     EmbedBuilder welcomeMessageEmbed = createWelcomeMessageEmbed(guild, rulesChannel);
-                    joinChannel.sendMessage(String.format("willkommen %s!", event.getMember().getAsMention())).complete();
-                    joinChannel.sendMessageEmbeds(welcomeMessageEmbed.build()).complete();
+                    joinChannel.sendMessage(String.format("willkommen %s!", event.getMember().getAsMention()))
+                            .setEmbeds(welcomeMessageEmbed.build()).complete();
                 });
     }
 

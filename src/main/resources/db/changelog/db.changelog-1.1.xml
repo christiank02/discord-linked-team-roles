@@ -25,10 +25,5 @@
     <changeSet id="19dc4f79-bfd9-4135-88bc-befeafdc6403" author="aimless">
         <sqlFile path="db/changelog/v0007.sql"/>
     </changeSet>
-    <changeSet id="cb257d49-9518-4011-af0c-cda513c91e2e" author="aimless">
-        <sqlFile path="db/changelog/v0008.sql" />
-    </changeSet>
-    <changeSet id="d9d8d70c-1790-4db7-bd2f-a2e9d6095b88" author="aimless">
-        <sqlFile path="db/changelog/v0009.sql" />
-    </changeSet>
+
 </databaseChangeLog>
