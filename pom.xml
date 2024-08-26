@@ -11,12 +11,12 @@
     </parent>
 
     <groupId>de.aimless</groupId>
-    <artifactId>aimless_java_bot</artifactId>
+    <artifactId>aimless-java-bot</artifactId>
     <version>0.0.7-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>aimless_java_bot</name>
-    <description>aimless_java_bot</description>
+    <name>Aimless-Discord-Bot</name>
+    <description>A Java-based discord bot application</description>
 
     <properties>
         <java.version>17</java.version>

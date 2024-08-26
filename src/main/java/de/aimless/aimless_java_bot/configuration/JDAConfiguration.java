@@ -17,12 +17,14 @@ public class JDAConfiguration {
     @Value("${AIMLESS_BOT_TOKEN}")
     private String token;
 
+    private static final String ACTIVITY = "I wish you a great day!";
+
     @Bean
     public JDA jda(ReadyListener readyListener) throws InterruptedException {
 
         JDA jda = JDABuilder.createDefault(token)
                 .setStatus(OnlineStatus.IDLE)
-                .setActivity(Activity.playing(".gg/yogiri"))
+                .setActivity(Activity.playing(ACTIVITY))
                 .addEventListeners(readyListener)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
