@@ -105,6 +105,6 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-```
 
-Make sure to replace placeholders like `yourusername`, `yourpassword`, `your_discord_bot_token`, `your_client_id`, `your_client_secret`, and `your_guild_id` with actual values.
+## Acknowledgements
+Thanks to the JDA team for their excellent Discord API wrapper
