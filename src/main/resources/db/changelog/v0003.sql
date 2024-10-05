@@ -1,2 +1,0 @@
-ALTER TABLE BoosterRole
-    ADD COLUMN autoAssignable BOOLEAN DEFAULT FALSE;

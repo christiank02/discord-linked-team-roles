@@ -27,8 +27,7 @@
         <cargo.maven3.version>1.10.12</cargo.maven3.version>
 
         <logback.version>1.5.3</logback.version>
-        <postgresql.version>42.7.2</postgresql.version>
-        <liquibase.version>4.26.0</liquibase.version>
+        <mssql.version>12.8.1.jre11</mssql.version>
         <discord-api.version>5.0.0-beta.20</discord-api.version>
         <junit.version>5.10.2</junit.version>
     </properties>
@@ -63,14 +62,9 @@
 
         <!-- database -->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${mssql.version}</version>
         </dependency>
 
         <!-- other -->

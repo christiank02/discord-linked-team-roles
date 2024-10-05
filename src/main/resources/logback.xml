@@ -8,7 +8,7 @@
         </layout>
     </appender>
 
-    <logger name="de.aimless.aimless_java_bot" level="debug" additivity="false">
+    <logger name="de.aimless.linkedroles" level="debug" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
